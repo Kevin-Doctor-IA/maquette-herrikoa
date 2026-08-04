@@ -330,9 +330,9 @@ body.has-disclaimer .app-layout { height:calc(100vh - 37px); }
                     <div class="dashboard-card chart-card">
                         <div class="dashboard-card-header"><h3 class="dashboard-card-title">Répartition géographique<span class="dashboard-card-sub">Graphique · Barre</span></h3><span class="dashboard-card-expand">↗</span></div>
                         <div class="bar-chart">
-                            <div class="bar-item"><div class="bar-label">Pyrénées-Atlantiques</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#10b981;"></div></div><div class="bar-value">47</div></div>
-                            <div class="bar-item"><div class="bar-label">Landes</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:#10b981;"></div></div><div class="bar-value">16</div></div>
-                            <div class="bar-item"><div class="bar-label">Autre</div><div class="bar-track"><div class="bar-fill" style="width:10.6%;background:#10b981;"></div></div><div class="bar-value">5</div></div>
+                            <div class="bar-item"><div class="bar-label">Labourd</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#10b981;"></div></div><div class="bar-value">48</div></div>
+                            <div class="bar-item"><div class="bar-label">Basse-Navarre</div><div class="bar-track"><div class="bar-fill" style="width:29.2%;background:#10b981;"></div></div><div class="bar-value">14</div></div>
+                            <div class="bar-item"><div class="bar-label">Soule</div><div class="bar-track"><div class="bar-fill" style="width:12.5%;background:#10b981;"></div></div><div class="bar-value">6</div></div>
                         </div>
                     </div>
                 </div>
@@ -668,7 +668,7 @@ var B = {
                "Commerce":"purple","Numérique":"cyan","Tourisme":"pink","BTP":"gray" },
   statutEnt: { "Contact":"gray","Rencontre":"cyan","Étude":"blue","Comité technique":"purple",
                "Conseil de surveillance":"orange","Portefeuille":"green","Arrêté":"red","Sorti":"gray" },
-  dept:      { "Pyrénées-Atlantiques":"teal","Landes":"cyan","Autre":"gray" },
+  province:      { "Labourd":"teal","Basse-Navarre":"cyan","Soule":"purple" },
   vigilance: { "Normal":"green","À surveiller":"orange","Difficulté":"red" },
   origine:   { "Réseau":"blue","Prescripteur":"cyan","Site web":"teal","Spontané":"yellow","Partenaire":"purple" },
   typeOp:    { "Capital":"blue","Compte courant d'associé":"cyan","Obligations convertibles":"purple",
@@ -693,7 +693,7 @@ var B = {
 var OPT = {
   statutEnt: ["Contact","Rencontre","Étude","Comité technique","Conseil de surveillance","Portefeuille","Arrêté","Sorti"],
   secteur:   ["Industrie","Agroalimentaire","Artisanat","Services","Commerce","Numérique","Tourisme","BTP"],
-  dept:      ["Pyrénées-Atlantiques","Landes","Autre"],
+  province:      ["Labourd","Basse-Navarre","Soule"],
   vigilance: ["Normal","À surveiller","Difficulté"],
   origine:   ["Réseau","Prescripteur","Site web","Spontané","Partenaire"],
   typeOp:    ["Capital","Compte courant d'associé","Obligations convertibles","Prêt participatif","Titres participatifs"],
@@ -715,50 +715,50 @@ var OPT = {
 
 /* ---- ENTREPRISES (CDC §4.1) ---- */
 function E(n,se,c,d,st,co,ef,em,ca,en,du,mo,vi,or,mt,si,ds,su,ec) {
-  return {nom:n,secteur:se,commune:c,dept:d,statut:st,coord:co,effectif:ef,emplois:em,ca:ca,entree:en,
+  return {nom:n,secteur:se,commune:c,province:d,statut:st,coord:co,effectif:ef,emplois:em,ca:ca,entree:en,
           duree:du,montant:mo,vigilance:vi,origine:or,motif:mt,site:si,dossier:ds,dernierSuivi:su,echange:ec};
 }
 var ENTREPRISES = [
- E("Alki","Artisanat","Larressore","Pyrénées-Atlantiques","Portefeuille","43.3556, -1.4322",62,38,"6 800 000 €","12/09/2018","7,9 ans","120 000 €","Normal","Réseau","","alki.fr","Dropbox / Participations / Alki","04/06/2026",""),
- E("Lynxter","Industrie","Bayonne","Pyrénées-Atlantiques","Portefeuille","43.4832, -1.4746",34,21,"4 250 000 €","14/03/2022","4,4 ans","185 000 €","Normal","Prescripteur","","lynxter.fr","Dropbox / Participations / Lynxter","18/07/2026",""),
- E("Wikicampers","Numérique","Bidart","Pyrénées-Atlantiques","Portefeuille","43.4383, -1.5919",28,17,"3 100 000 €","06/06/2019","7,2 ans","95 000 €","Normal","Site web","","wikicampers.fr","Dropbox / Participations / Wikicampers","21/05/2026",""),
- E("Tekniaero","Industrie","Tarnos","Landes","Portefeuille","43.5397, -1.4636",47,30,"7 400 000 €","21/01/2021","5,5 ans","140 000 €","Normal","Partenaire","","tekniaero.fr","Dropbox / Participations / Tekniaero","26/06/2026",""),
- E("Don Quichosse","Agroalimentaire","Saint-Sever","Landes","Portefeuille","43.7561, -0.5744",19,12,"2 250 000 €","18/10/2020","5,8 ans","70 000 €","Normal","Réseau","","donquichosse.fr","Dropbox / Participations / Don Quichosse","14/05/2026",""),
- E("La Boîte Concept","Commerce","Anglet","Pyrénées-Atlantiques","Portefeuille","43.4831, -1.5153",14,9,"1 800 000 €","03/04/2023","3,3 ans","60 000 €","Normal","Prescripteur","","laboiteconcept.fr","Dropbox / Participations / La Boîte Concept","09/06/2026",""),
- E("Ma Petite Sponso","Numérique","Biarritz","Pyrénées-Atlantiques","Portefeuille","43.4832, -1.5586",11,8,"920 000 €","29/11/2023","2,7 ans","45 000 €","Normal","Site web","","mapetitesponso.fr","Dropbox / Participations / Ma Petite Sponso","30/06/2026",""),
- E("Pateco","Agroalimentaire","Hasparren","Pyrénées-Atlantiques","Portefeuille","43.3856, -1.3053",24,15,"3 600 000 €","07/07/2017","9,1 ans","88 000 €","Normal","Réseau","","pateco.fr","Dropbox / Participations / Pateco","12/05/2026",""),
- E("Ilargi Composites","Industrie","Mouguerre","Pyrénées-Atlantiques","Portefeuille","43.4703, -1.4008",31,18,"2 900 000 €","15/05/2019","7,2 ans","95 000 €","Difficulté","Prescripteur","","ilargi-composites.fr","Dropbox / Participations / Ilargi Composites","22/07/2026",""),
- E("Harri Agro","Agroalimentaire","Saint-Palais","Pyrénées-Atlantiques","Portefeuille","43.3272, -1.0400",22,13,"1 950 000 €","09/02/2020","6,5 ans","72 000 €","Difficulté","Partenaire","","harri-agro.fr","Dropbox / Participations / Harri Agro","15/07/2026",""),
- E("Bidart Confection","Artisanat","Bidart","Pyrénées-Atlantiques","Portefeuille","43.4383, -1.5919",16,10,"1 320 000 €","24/06/2021","5,1 ans","48 000 €","À surveiller","Réseau","","bidart-confection.fr","Dropbox / Participations / Bidart Confection","09/07/2026",""),
- E("Uhaina Marine","Tourisme","Ciboure","Pyrénées-Atlantiques","Portefeuille","43.3819, -1.6708",27,16,"2 400 000 €","11/03/2020","6,4 ans","85 000 €","À surveiller","Site web","","uhaina-marine.fr","Dropbox / Participations / Uhaina Marine","02/07/2026",""),
- E("Errota Distribution","Commerce","Urrugne","Pyrénées-Atlantiques","Portefeuille","43.3556, -1.6989",12,7,"1 100 000 €","30/09/2022","3,8 ans","40 000 €","À surveiller","Spontané","","errota-distribution.fr","Dropbox / Participations / Errota Distribution","24/06/2026",""),
- E("Sarea Numérique","Numérique","Anglet","Pyrénées-Atlantiques","Portefeuille","43.4831, -1.5153",18,11,"1 480 000 €","17/01/2023","3,5 ans","65 000 €","À surveiller","Prescripteur","","sarea-numerique.fr","Dropbox / Participations / Sarea Numérique","18/06/2026",""),
- E("Landes Métal Process","BTP","Mont-de-Marsan","Landes","Portefeuille","43.8914, -0.4994",21,13,"2 050 000 €","05/11/2021","4,7 ans","55 000 €","À surveiller","Partenaire","","landes-metal.fr","Dropbox / Participations / Landes Métal Process","11/06/2026",""),
+ E("Alki","Artisanat","Larressore","Labourd","Portefeuille","43.3556, -1.4322",62,38,"6 800 000 €","12/09/2018","7,9 ans","120 000 €","Normal","Réseau","","alki.fr","Dropbox / Participations / Alki","04/06/2026",""),
+ E("Lynxter","Industrie","Bayonne","Labourd","Portefeuille","43.4832, -1.4746",34,21,"4 250 000 €","14/03/2022","4,4 ans","185 000 €","Normal","Prescripteur","","lynxter.fr","Dropbox / Participations / Lynxter","18/07/2026",""),
+ E("Wikicampers","Numérique","Bidart","Labourd","Portefeuille","43.4383, -1.5919",28,17,"3 100 000 €","06/06/2019","7,2 ans","95 000 €","Normal","Site web","","wikicampers.fr","Dropbox / Participations / Wikicampers","21/05/2026",""),
+ E("Tekniaero","Industrie","Mouguerre","Labourd","Portefeuille","43.5397, -1.4636",47,30,"7 400 000 €","21/01/2021","5,5 ans","140 000 €","Normal","Partenaire","","tekniaero.fr","Dropbox / Participations / Tekniaero","26/06/2026",""),
+ E("Don Quichosse","Agroalimentaire","Saint-Palais","Basse-Navarre","Portefeuille","43.7561, -0.5744",19,12,"2 250 000 €","18/10/2020","5,8 ans","70 000 €","Normal","Réseau","","donquichosse.fr","Dropbox / Participations / Don Quichosse","14/05/2026",""),
+ E("La Boîte Concept","Commerce","Anglet","Labourd","Portefeuille","43.4831, -1.5153",14,9,"1 800 000 €","03/04/2023","3,3 ans","60 000 €","Normal","Prescripteur","","laboiteconcept.fr","Dropbox / Participations / La Boîte Concept","09/06/2026",""),
+ E("Ma Petite Sponso","Numérique","Biarritz","Labourd","Portefeuille","43.4832, -1.5586",11,8,"920 000 €","29/11/2023","2,7 ans","45 000 €","Normal","Site web","","mapetitesponso.fr","Dropbox / Participations / Ma Petite Sponso","30/06/2026",""),
+ E("Pateco","Agroalimentaire","Hasparren","Labourd","Portefeuille","43.3856, -1.3053",24,15,"3 600 000 €","07/07/2017","9,1 ans","88 000 €","Normal","Réseau","","pateco.fr","Dropbox / Participations / Pateco","12/05/2026",""),
+ E("Ilargi Composites","Industrie","Mouguerre","Labourd","Portefeuille","43.4703, -1.4008",31,18,"2 900 000 €","15/05/2019","7,2 ans","95 000 €","Difficulté","Prescripteur","","ilargi-composites.fr","Dropbox / Participations / Ilargi Composites","22/07/2026",""),
+ E("Harri Agro","Agroalimentaire","Saint-Palais","Basse-Navarre","Portefeuille","43.3272, -1.0400",22,13,"1 950 000 €","09/02/2020","6,5 ans","72 000 €","Difficulté","Partenaire","","harri-agro.fr","Dropbox / Participations / Harri Agro","15/07/2026",""),
+ E("Bidart Confection","Artisanat","Bidart","Labourd","Portefeuille","43.4383, -1.5919",16,10,"1 320 000 €","24/06/2021","5,1 ans","48 000 €","À surveiller","Réseau","","bidart-confection.fr","Dropbox / Participations / Bidart Confection","09/07/2026",""),
+ E("Uhaina Marine","Tourisme","Ciboure","Labourd","Portefeuille","43.3819, -1.6708",27,16,"2 400 000 €","11/03/2020","6,4 ans","85 000 €","À surveiller","Site web","","uhaina-marine.fr","Dropbox / Participations / Uhaina Marine","02/07/2026",""),
+ E("Errota Distribution","Commerce","Urrugne","Labourd","Portefeuille","43.3556, -1.6989",12,7,"1 100 000 €","30/09/2022","3,8 ans","40 000 €","À surveiller","Spontané","","errota-distribution.fr","Dropbox / Participations / Errota Distribution","24/06/2026",""),
+ E("Sarea Numérique","Numérique","Anglet","Labourd","Portefeuille","43.4831, -1.5153",18,11,"1 480 000 €","17/01/2023","3,5 ans","65 000 €","À surveiller","Prescripteur","","sarea-numerique.fr","Dropbox / Participations / Sarea Numérique","18/06/2026",""),
+ E("Xiberoa Métal","BTP","Mauléon-Licharre","Soule","Portefeuille","43.8914, -0.4994",21,13,"2 050 000 €","05/11/2021","4,7 ans","55 000 €","À surveiller","Partenaire","","xiberoa-metal.fr","Dropbox / Participations / Xiberoa Métal","11/06/2026",""),
  /* Sorties */
- E("Aldudes Salaisons","Agroalimentaire","Les Aldudes","Pyrénées-Atlantiques","Sorti","43.0242, -1.4194",26,16,"2 800 000 €","04/05/2014","","110 000 €","Normal","Réseau","","aldudes-salaisons.fr","Dropbox / Participations / Aldudes Salaisons","18/02/2025",""),
- E("Orthe Mécanique","Industrie","Peyrehorade","Landes","Sorti","43.5464, -1.1122",33,20,"3 400 000 €","22/09/2013","","95 000 €","Normal","Prescripteur","","orthe-mecanique.fr","Dropbox / Participations / Orthe Mécanique","09/11/2024",""),
+ E("Aldudes Salaisons","Agroalimentaire","Les Aldudes","Basse-Navarre","Sorti","43.0242, -1.4194",26,16,"2 800 000 €","04/05/2014","","110 000 €","Normal","Réseau","","aldudes-salaisons.fr","Dropbox / Participations / Aldudes Salaisons","18/02/2025",""),
+ E("Garazi Mécanique","Industrie","Saint-Jean-Pied-de-Port","Basse-Navarre","Sorti","43.5464, -1.1122",33,20,"3 400 000 €","22/09/2013","","95 000 €","Normal","Prescripteur","","garazi-mecanique.fr","Dropbox / Participations / Garazi Mécanique","09/11/2024",""),
  /* Dossiers en cours */
- E("Errobi Mécanique","Industrie","Itxassou","Pyrénées-Atlantiques","Contact","43.3306, -1.4058",12,0,"1 400 000 €","","","40 000 €","Normal","Site web","","errobi-mecanique.fr","","","28/07/2026"),
- E("Tursan Volailles","Agroalimentaire","Geaune","Landes","Contact","43.6444, -0.3992",18,0,"2 100 000 €","","","55 000 €","Normal","Prescripteur","","tursan-volailles.fr","","","24/07/2026"),
- E("Xareta Numérique","Numérique","Sare","Pyrénées-Atlantiques","Contact","43.3111, -1.5811",7,0,"540 000 €","","","30 000 €","Normal","Réseau","","xareta.fr","","","21/07/2026"),
- E("Marensin Charpente","BTP","Léon","Landes","Contact","43.8778, -1.3050",23,0,"2 800 000 €","","","75 000 €","Normal","Spontané","","marensin-charpente.fr","","","17/07/2026"),
- E("Gaztelu Traiteur","Commerce","Saint-Jean-de-Luz","Pyrénées-Atlantiques","Contact","43.3883, -1.6594",15,0,"1 250 000 €","","","45 000 €","Normal","Site web","","gaztelu-traiteur.fr","","","10/07/2026"),
- E("Bidasoa Plasturgie","Industrie","Hendaye","Pyrénées-Atlantiques","Rencontre","43.3589, -1.7747",29,0,"3 400 000 €","","","70 000 €","Normal","Réseau","","bidasoa-plasturgie.fr","","","30/07/2026"),
- E("Chalosse Fromages","Agroalimentaire","Amou","Landes","Rencontre","43.5906, -0.7458",11,0,"890 000 €","","","35 000 €","Normal","Partenaire","","chalosse-fromages.fr","","","23/07/2026"),
- E("Itsas Logistique","Services","Bayonne","Pyrénées-Atlantiques","Rencontre","43.4933, -1.4750",38,0,"4 600 000 €","","","85 000 €","Normal","Prescripteur","","itsas-logistique.fr","","","16/07/2026"),
- E("Hegoa Textile","Artisanat","Mauléon-Licharre","Pyrénées-Atlantiques","Rencontre","43.2278, -0.8811",17,0,"1 350 000 €","","","50 000 €","Normal","Réseau","","hegoa-textile.fr","","","09/07/2026"),
- E("Anaia Robotique","Numérique","Anglet","Pyrénées-Atlantiques","Étude","43.4831, -1.5153",14,0,"1 150 000 €","","","60 000 €","Normal","Prescripteur","","anaia-robotique.fr","","","31/07/2026"),
- E("Baigura Énergies","Services","Hélette","Pyrénées-Atlantiques","Étude","43.3006, -1.2308",26,0,"3 050 000 €","","","95 000 €","Normal","Partenaire","","baigura-energies.fr","","","27/07/2026"),
- E("Larrun Agro","Agroalimentaire","Ascain","Pyrénées-Atlantiques","Étude","43.3436, -1.6208",13,0,"1 020 000 €","","","45 000 €","Normal","Réseau","","larrun-agro.fr","","","20/07/2026"),
- E("Elgar Packaging","Industrie","Mont-de-Marsan","Landes","Étude","43.8914, -0.4994",22,0,"2 450 000 €","","","65 000 €","Normal","Site web","","elgar-packaging.fr","","","13/07/2026"),
- E("Zubia Ingénierie","Services","Biarritz","Pyrénées-Atlantiques","Comité technique","43.4832, -1.5586",19,0,"1 900 000 €","","","50 000 €","Normal","Réseau","","zubia-ingenierie.fr","","","29/07/2026"),
- E("Ondarra Nautic","Tourisme","Capbreton","Landes","Comité technique","43.6417, -1.4292",16,0,"1 480 000 €","","","40 000 €","Normal","Prescripteur","","ondarra-nautic.fr","","","22/07/2026"),
- E("Menuiserie Etxeberri","Artisanat","Cambo-les-Bains","Pyrénées-Atlantiques","Comité technique","43.3583, -1.3986",9,0,"760 000 €","","","30 000 €","Normal","Spontané","","menuiserie-etxeberri.fr","","","15/07/2026"),
- E("Adour Métal Services","Industrie","Tarnos","Landes","Conseil de surveillance","43.5397, -1.4636",24,0,"2 700 000 €","","","40 000 €","Normal","Partenaire","","adour-metal.fr","","","01/08/2026"),
- E("Conserverie Ibarrune","Agroalimentaire","Saint-Palais","Pyrénées-Atlantiques","Conseil de surveillance","43.3272, -1.0400",15,0,"1 320 000 €","","","30 000 €","Normal","Prescripteur","","conserverie-ibarrune.fr","","","25/07/2026"),
- E("Sokoburu Distribution","Commerce","Hendaye","Pyrénées-Atlantiques","Arrêté","43.3589, -1.7747",10,0,"820 000 €","","","60 000 €","Normal","Site web","Fonds propres insuffisants, plan de financement non bouclé. Dossier réorienté vers Initiative Pays Basque.","sokoburu-distribution.fr","","","19/06/2026"),
- E("Oihan Tourisme","Tourisme","Espelette","Pyrénées-Atlantiques","Arrêté","43.3444, -1.4472",8,0,"610 000 €","","","45 000 €","Normal","Réseau","Projet reporté par le dirigeant, reprise du dossier envisagée en 2027.","oihan-tourisme.fr","","","05/06/2026"),
- E("Kanbo Services","Services","Cambo-les-Bains","Pyrénées-Atlantiques","Arrêté","43.3583, -1.3986",6,0,"430 000 €","","","35 000 €","Normal","Spontané","Avis défavorable du comité technique, modèle économique jugé trop dépendant d'un client unique.","kanbo-services.fr","","","28/05/2026")
+ E("Errobi Mécanique","Industrie","Itxassou","Labourd","Contact","43.3306, -1.4058",12,0,"1 400 000 €","","","40 000 €","Normal","Site web","","errobi-mecanique.fr","","","28/07/2026"),
+ E("Amikuze Volailles","Agroalimentaire","Saint-Palais","Basse-Navarre","Contact","43.6444, -0.3992",18,0,"2 100 000 €","","","55 000 €","Normal","Prescripteur","","amikuze-volailles.fr","","","24/07/2026"),
+ E("Xareta Numérique","Numérique","Sare","Labourd","Contact","43.3111, -1.5811",7,0,"540 000 €","","","30 000 €","Normal","Réseau","","xareta.fr","","","21/07/2026"),
+ E("Oztibarre Charpente","BTP","Larceveau","Basse-Navarre","Contact","43.8778, -1.3050",23,0,"2 800 000 €","","","75 000 €","Normal","Spontané","","oztibarre-charpente.fr","","","17/07/2026"),
+ E("Gaztelu Traiteur","Commerce","Saint-Jean-de-Luz","Labourd","Contact","43.3883, -1.6594",15,0,"1 250 000 €","","","45 000 €","Normal","Site web","","gaztelu-traiteur.fr","","","10/07/2026"),
+ E("Bidasoa Plasturgie","Industrie","Hendaye","Labourd","Rencontre","43.3589, -1.7747",29,0,"3 400 000 €","","","70 000 €","Normal","Réseau","","bidasoa-plasturgie.fr","","","30/07/2026"),
+ E("Baigorri Fromages","Agroalimentaire","Saint-Étienne-de-Baïgorry","Basse-Navarre","Rencontre","43.5906, -0.7458",11,0,"890 000 €","","","35 000 €","Normal","Partenaire","","baigorri-fromages.fr","","","23/07/2026"),
+ E("Itsas Logistique","Services","Bayonne","Labourd","Rencontre","43.4933, -1.4750",38,0,"4 600 000 €","","","85 000 €","Normal","Prescripteur","","itsas-logistique.fr","","","16/07/2026"),
+ E("Hegoa Textile","Artisanat","Mauléon-Licharre","Soule","Rencontre","43.2278, -0.8811",17,0,"1 350 000 €","","","50 000 €","Normal","Réseau","","hegoa-textile.fr","","","09/07/2026"),
+ E("Anaia Robotique","Numérique","Anglet","Labourd","Étude","43.4831, -1.5153",14,0,"1 150 000 €","","","60 000 €","Normal","Prescripteur","","anaia-robotique.fr","","","31/07/2026"),
+ E("Baigura Énergies","Services","Hélette","Basse-Navarre","Étude","43.3006, -1.2308",26,0,"3 050 000 €","","","95 000 €","Normal","Partenaire","","baigura-energies.fr","","","27/07/2026"),
+ E("Larrun Agro","Agroalimentaire","Ascain","Labourd","Étude","43.3436, -1.6208",13,0,"1 020 000 €","","","45 000 €","Normal","Réseau","","larrun-agro.fr","","","20/07/2026"),
+ E("Elgar Packaging","Industrie","Mouguerre","Labourd","Étude","43.8914, -0.4994",22,0,"2 450 000 €","","","65 000 €","Normal","Site web","","elgar-packaging.fr","","","13/07/2026"),
+ E("Zubia Ingénierie","Services","Biarritz","Labourd","Comité technique","43.4832, -1.5586",19,0,"1 900 000 €","","","50 000 €","Normal","Réseau","","zubia-ingenierie.fr","","","29/07/2026"),
+ E("Ondarra Nautic","Tourisme","Hendaye","Labourd","Comité technique","43.6417, -1.4292",16,0,"1 480 000 €","","","40 000 €","Normal","Prescripteur","","ondarra-nautic.fr","","","22/07/2026"),
+ E("Menuiserie Etxeberri","Artisanat","Cambo-les-Bains","Labourd","Comité technique","43.3583, -1.3986",9,0,"760 000 €","","","30 000 €","Normal","Spontané","","menuiserie-etxeberri.fr","","","15/07/2026"),
+ E("Adour Métal Services","Industrie","Bayonne","Labourd","Conseil de surveillance","43.5397, -1.4636",24,0,"2 700 000 €","","","40 000 €","Normal","Partenaire","","adour-metal.fr","","","01/08/2026"),
+ E("Conserverie Ibarrune","Agroalimentaire","Saint-Palais","Basse-Navarre","Conseil de surveillance","43.3272, -1.0400",15,0,"1 320 000 €","","","30 000 €","Normal","Prescripteur","","conserverie-ibarrune.fr","","","25/07/2026"),
+ E("Sokoburu Distribution","Commerce","Hendaye","Labourd","Arrêté","43.3589, -1.7747",10,0,"820 000 €","","","60 000 €","Normal","Site web","Fonds propres insuffisants, plan de financement non bouclé. Dossier réorienté vers Initiative Pays Basque.","sokoburu-distribution.fr","","","19/06/2026"),
+ E("Oihan Tourisme","Tourisme","Espelette","Labourd","Arrêté","43.3444, -1.4472",8,0,"610 000 €","","","45 000 €","Normal","Réseau","Projet reporté par le dirigeant, reprise du dossier envisagée en 2027.","oihan-tourisme.fr","","","05/06/2026"),
+ E("Kanbo Services","Services","Cambo-les-Bains","Labourd","Arrêté","43.3583, -1.3986",6,0,"430 000 €","","","35 000 €","Normal","Spontané","Avis défavorable du comité technique, modèle économique jugé trop dépendant d'un client unique.","kanbo-services.fr","","","28/05/2026")
 ];
 
 /* ---- ORGANISATIONS (nouvelle table) ---- */
@@ -775,7 +775,7 @@ var ORGANISATIONS = [
  O("Chambre des Métiers 64","1 rue Pitrac","64000","Pau","Partenaire"),
  O("Région Nouvelle-Aquitaine","14 rue François de Sourdis","33000","Bordeaux","Institutionnel"),
  O("Communauté Pays Basque","15 avenue Foch","64100","Bayonne","Institutionnel"),
- O("Département des Landes","23 rue Victor Hugo","40000","Mont-de-Marsan","Institutionnel"),
+ O("Département des Pyrénées-Atlantiques","64 avenue Jean Biray","64000","Pau","Institutionnel"),
  O("Bpifrance Nouvelle-Aquitaine","11 quai de Paludate","33800","Bordeaux","Institutionnel")
 ];
 
@@ -789,18 +789,18 @@ var CONTACTS = [
  C("Etcheverry Julien","Président","Dirigeant","j.etcheverry@lynxter.fr","05 59 12 44 08","Bayonne","Lynxter","","Participation",true,"Valide","12/06/2026",""),
  C("Lasserre Maëva","Directrice administrative et financière","Dirigeant","m.lasserre@lynxter.fr","05 59 12 44 11","Bayonne","Lynxter","","Participation",true,"Valide","12/06/2026",""),
  C("Oyharçabal Maider","Gérante","Dirigeant","m.oyharcabal@alki.fr","05 59 93 31 20","Larressore","Alki","","Participation",true,"Valide","12/06/2026",""),
- C("Iturralde Bixente","Directeur général","Dirigeant","b.iturralde@tekniaero.fr","05 59 64 22 70","Tarnos","Tekniaero","","Participation",true,"Valide","12/06/2026",""),
+ C("Iturralde Bixente","Directeur général","Dirigeant","b.iturralde@tekniaero.fr","05 59 64 22 70","Mouguerre","Tekniaero","","Participation",true,"Valide","12/06/2026",""),
  C("Dagorret Peio","Gérant","Dirigeant","p.dagorret@pateco.fr","05 59 29 55 12","Hasparren","Pateco","","Participation",true,"Valide","12/06/2026",""),
  C("Barthélémy Sophie","Présidente","Dirigeant","s.barthelemy@ilargi-composites.fr","05 59 31 88 04","Mouguerre","Ilargi Composites","","Participation",true,"Valide","12/06/2026",""),
  C("Minvielle Karine","Directrice","Dirigeant","k.minvielle@wikicampers.fr","05 59 54 12 33","Bidart","Wikicampers","","Participation",true,"Valide","12/06/2026",""),
  /* Contacts de dossiers en cours */
  C("Haramboure Nicolas","Dirigeant fondateur","Prospect","contact@errobi-mecanique.fr","05 59 29 71 03","Itxassou","Errobi Mécanique","","Formulaire site",true,"Valide","12/06/2026",""),
- C("Cazenave Pierre","Gérant","Prospect","p.cazenave@tursan-volailles.fr","05 58 44 60 12","Geaune","Tursan Volailles","","Saisie manuelle",false,"À vérifier","",""),
+ C("Cazenave Pierre","Gérant","Prospect","p.cazenave@amikuze-volailles.fr","05 58 44 60 12","Saint-Palais","Amikuze Volailles","","Saisie manuelle",false,"À vérifier","",""),
  C("Sallenave Julie","Cogérante","Prospect","j.sallenave@bidasoa-plasturgie.fr","05 59 20 41 76","Hendaye","Bidasoa Plasturgie","","Formulaire site",true,"Valide","12/06/2026",""),
  C("Duprat Mathieu","Président","Prospect","m.duprat@anaia-robotique.fr","05 59 03 27 60","Anglet","Anaia Robotique","","Saisie manuelle",true,"Valide","12/06/2026",""),
  /* Contacts d'anciennes participations */
  C("Erramouspé Jean","Ancien gérant","Dirigeant","j.erramouspe@aldudes-salaisons.fr","05 59 37 55 21","Les Aldudes","Aldudes Salaisons","","Participation",true,"Valide","12/06/2026",""),
- C("Lataillade Serge","Ancien président","Dirigeant","s.lataillade@orthe-mecanique.fr","05 58 73 12 09","Peyrehorade","Orthe Mécanique","","Participation",false,"À vérifier","",""),
+ C("Lataillade Serge","Ancien président","Dirigeant","s.lataillade@garazi-mecanique.fr","05 58 73 12 09","Saint-Jean-Pied-de-Port","Garazi Mécanique","","Participation",false,"À vérifier","",""),
  /* Actionnaires personnes physiques */
  C("Duhalde Bernard","","Actionnaire","b.duhalde@orange.fr","06 81 22 45 37","Anglet","","","Access",true,"Valide","12/06/2026","Inscrit"),
  C("Iriart Christine","","Actionnaire","c.iriart@wanadoo.fr","06 74 09 18 62","Ustaritz","","","Access",true,"À vérifier","","Non inscrit"),
@@ -822,7 +822,7 @@ var CONTACTS = [
  /* Institutionnels */
  C("Larrieu Vincent","Chargé de mission développement économique","Institutionnel","v.larrieu@region-na.fr","05 57 57 80 00","Bordeaux","","Région Nouvelle-Aquitaine","Outlook",false,"Valide","",""),
  C("Etchegaray Maialen","Responsable économie","Institutionnel","m.etchegaray@communaute-paysbasque.fr","05 59 48 30 85","Bayonne","","Communauté Pays Basque","Outlook",true,"Valide","12/06/2026",""),
- C("Dubourg Pascal","Directeur du développement","Institutionnel","p.dubourg@landes.fr","05 58 05 40 40","Mont-de-Marsan","","Département des Landes","Saisie manuelle",true,"Valide","12/06/2026",""),
+ C("Dubourg Pascal","Directeur du développement","Institutionnel","p.dubourg@le64.fr","05 59 11 46 64","Pau","","Département des Pyrénées-Atlantiques","Saisie manuelle",true,"Valide","12/06/2026",""),
  C("Nguyen Thi Lan","Chargée d'affaires","Institutionnel","l.nguyen@bpifrance.fr","05 56 48 45 00","Bordeaux","","Bpifrance Nouvelle-Aquitaine","Outlook",false,"Valide","","")
 ];
 
@@ -861,7 +861,7 @@ var OPERATIONS = [
  P("Uhaina Marine","Obligations convertibles","85 000 €","11/03/2020",7,"5,2 %","11/03/2027",false,"","En cours"),
  P("Bidart Confection","Prêt participatif","48 000 €","24/06/2021",6,"4,6 %","24/06/2027",false,"","En cours"),
  P("Aldudes Salaisons","Capital","110 000 €","04/05/2014",10,"5,0 %","04/05/2024",false,"","Cédée"),
- P("Orthe Mécanique","Capital","95 000 €","22/09/2013",10,"5,5 %","22/09/2023",false,"","Remboursée")
+ P("Garazi Mécanique","Capital","95 000 €","22/09/2013",10,"5,5 %","22/09/2023",false,"","Remboursée")
 ];
 
 /* ---- ASSEMBLÉES GÉNÉRALES (CDC §4.5) ---- */
@@ -874,11 +874,11 @@ var AGS = [
  G("Harri Agro","23/09/2026","Saint-Palais, siège social","Jérémy","Confirmée"),
  G("Lynxter","24/09/2026","Bayonne, siège social","Jérémy","Confirmée"),
  G("Pateco","25/09/2026","Hasparren, siège social","Jérémy","À planifier"),
- G("Tekniaero","02/10/2026","Tarnos, siège social","Jérémy","À planifier"),
+ G("Tekniaero","02/10/2026","Mouguerre, siège social","Jérémy","À planifier"),
  G("Sarea Numérique","08/10/2026","Anglet, siège social","Clémence","À planifier"),
- G("Don Quichosse","09/10/2026","Saint-Sever, siège social","Non couverte","À planifier"),
+ G("Don Quichosse","09/10/2026","Saint-Palais, siège social","Non couverte","À planifier"),
  G("Errota Distribution","15/10/2026","Urrugne, siège social","Non couverte","À planifier"),
- G("Landes Métal Process","22/10/2026","Mont-de-Marsan, siège social","Jérémy","À planifier"),
+ G("Xiberoa Métal","22/10/2026","Mauléon-Licharre, siège social","Jérémy","À planifier"),
  G("Bidart Confection","29/05/2026","Bidart, siège social","Non couverte","Réalisée"),
  G("Ma Petite Sponso","05/06/2026","Biarritz, siège social","Jérémy","Réalisée"),
  G("La Boîte Concept","12/06/2026","Anglet, siège social","Clémence","Réalisée")
@@ -896,7 +896,7 @@ var PUBLICATIONS = [
  {titre:"Rencontre experts : transmission d'entreprise",type:"Événement",contenu:"Table ronde avec le comité technique sur la transmission d'entreprise en Pays Basque. Ouvert aux actionnaires et aux dirigeants du portefeuille.",illustration:"rencontre-experts.jpg",date:"20/09/2026",statutPost:"Programmé",compte:"Herrikoa",entreprise:"",commentaires:"Inscriptions ouvertes début septembre.",invites:240,inscrits:87,relances:35,statutEv:"Invitations envoyées"},
  {titre:"Visite d'entreprise : Lynxter",type:"Événement",contenu:"Visite du site de production bayonnais, présentation de la gamme silicone et échange avec le dirigeant.",illustration:"",date:"14/10/2026",statutPost:"À rédiger",compte:"Herrikoa",entreprise:"Lynxter",commentaires:"Jauge limitée à 40 personnes.",invites:120,inscrits:41,relances:22,statutEv:"En préparation"},
  {titre:"Rencontre experts : financement de la croissance",type:"Événement",contenu:"Retour sur les instruments de financement mobilisés par Herrikoa auprès des PME du territoire.",illustration:"rencontre-financement.jpg",date:"12/03/2026",statutPost:"Publié",compte:"Herrikoa",entreprise:"",commentaires:"Édition close, bon taux de participation.",invites:210,inscrits:96,relances:0,statutEv:"Clôturé"},
- {titre:"Visite d'entreprise : Tekniaero",type:"Événement",contenu:"Découverte de l'atelier de sous-traitance aéronautique de Tarnos avec le comité technique.",illustration:"",date:"19/08/2026",statutPost:"Rédigé et à programmer",compte:"Herrikoa",entreprise:"Tekniaero",commentaires:"Date à confirmer avec le dirigeant.",invites:90,inscrits:28,relances:14,statutEv:"En préparation"}
+ {titre:"Visite d'entreprise : Tekniaero",type:"Événement",contenu:"Découverte de l'atelier de sous-traitance aéronautique de Mouguerre avec le comité technique.",illustration:"",date:"19/08/2026",statutPost:"Rédigé et à programmer",compte:"Herrikoa",entreprise:"Tekniaero",commentaires:"Date à confirmer avec le dirigeant.",invites:90,inscrits:28,relances:14,statutEv:"En préparation"}
 ];
 
 /* Lookup : rattachement du contact d'après le statut de l'entreprise liée */
@@ -923,7 +923,7 @@ var F_ENTREPRISE = [
  {g:"Identité",      l:"Statut",                        k:"statut",    t:"select", o:OPT.statutEnt, b:B.statutEnt},
  {g:"Identité",      l:"Secteur",                       k:"secteur",   t:"select", o:OPT.secteur,   b:B.secteur},
  {g:"Identité",      l:"Commune",                       k:"commune",   t:"text"},
- {g:"Identité",      l:"Département",                   k:"dept",      t:"select", o:OPT.dept,      b:B.dept},
+ {g:"Identité",      l:"Province",                   k:"province",      t:"select", o:OPT.province,      b:B.province},
  {g:"Identité",      l:"Coordonnées",                   k:"coord",     t:"text"},
  {g:"Identité",      l:"Site web",                      k:"site",      t:"url"},
  {g:"Identité",      l:"Dossier",                       k:"dossier",   t:"url"},
@@ -1229,7 +1229,7 @@ function viewEntreprises() {
         {i:'▾',  l:'Statut',      v:function(r){return bdg(B.statutEnt, r.statut);}},
         {i:'▾',  l:'Secteur',     v:function(r){return bdg(B.secteur, r.secteur);}},
         {i:'A',  l:'Commune',     v:function(r){return txt(r.commune);}},
-        {i:'▾',  l:'Département', v:function(r){return txt(r.dept);}},
+        {i:'▾',  l:'Province', v:function(r){return txt(r.province);}},
         {i:'Σ',  l:'Montant total engagé', cls:'col-currency', v:function(r){return txt(r.montant);}},
         {i:'📅', l:"Date d'entrée", v:function(r){return txt(r.entree);}},
         {i:'ƒ',  l:'Durée de détention', cls:'col-number', v:function(r){return txt(r.duree);}},

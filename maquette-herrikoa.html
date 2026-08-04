@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>Herrikoa - Espace Airtable (maquette de présentation)</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif; font-size:13px; color:#333; background:#f8f8f8; }
+a { text-decoration:none; color:inherit; }
+button { font-family:inherit; }
+
+.disclaimer-banner { position:fixed; top:0; left:0; right:0; z-index:10000; background:#fef3c7; color:#92400e; text-align:center; padding:8px 16px; font-size:13px; font-weight:600; border-bottom:2px solid #f59e0b; letter-spacing:.3px; }
+body.has-disclaimer { padding-top:37px; }
+body.has-disclaimer .app-layout { height:calc(100vh - 37px); }
+.app-layout { display:flex; height:100vh; overflow:hidden; }
+
+/* SIDEBAR */
+.sidebar { width:240px; min-width:240px; background:#182848; color:#ffffffcc; display:flex; flex-direction:column; overflow-y:auto; }
+.sidebar-header { display:flex; align-items:center; gap:8px; padding:12px 16px; background:#0f1d35; font-size:14px; font-weight:600; color:#fff; border-bottom:1px solid #ffffff15; }
+.sidebar-logo { font-size:16px; }
+.sidebar-app-name { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sidebar-nav { flex:1; padding:8px 0; overflow-y:auto; }
+.sidebar-group { margin-bottom:6px; }
+.sidebar-group-title { display:flex; align-items:center; gap:7px; padding:9px 16px 5px; font-size:12px; font-weight:600; color:#ffffff99; text-transform:uppercase; letter-spacing:.6px; user-select:none; }
+.sidebar-group-chevron { font-size:9px; opacity:.7; }
+.sidebar-item { display:block; padding:7px 16px 7px 30px; font-size:13px; color:#ffffffcc; cursor:pointer; border-left:3px solid transparent; transition:background .15s; }
+.sidebar-item:hover { background:#ffffff0d; }
+.sidebar-item.active { background:#ffffff1a; color:#fff; font-weight:500; border-left-color:#F5C518; }
+.sidebar-footer { display:flex; align-items:center; gap:8px; padding:12px 16px; border-top:1px solid #ffffff15; font-size:12px; color:#ffffffaa; }
+
+/* MAIN */
+.main-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.page { display:none; flex-direction:column; height:100%; overflow:hidden; }
+.page.active { display:flex; }
+.page-header { display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:52px; min-height:52px; background:#fff; border-bottom:1px solid #e5e5e5; }
+.breadcrumb { font-size:14px; color:#666; }
+.breadcrumb-sep { margin:0 6px; color:#999; }
+.breadcrumb-current { color:#333; font-weight:600; }
+.header-right { display:flex; align-items:center; gap:8px; }
+.header-btn { padding:5px 12px; border:none; background:transparent; color:#666; font-size:13px; cursor:pointer; border-radius:4px; }
+.header-btn:hover { background:#f2f2f2; }
+.header-btn-icon { padding:5px 8px; border:none; background:transparent; color:#666; font-size:14px; cursor:pointer; border-radius:4px; }
+.btn-primary { padding:6px 16px; background:#166ee1; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; }
+.btn-primary:hover { background:#1258b5; }
+.content-area { flex:1; overflow:auto; background:#f8f8f8; }
+.content-white { background:#fff; }
+.content-dashboard { background:#f5f5f5; padding:24px; }
+.content-kanban { background:#f5f5f5; padding:16px 20px; overflow-x:auto; }
+
+/* BADGES */
+.badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:500; line-height:18px; white-space:nowrap; }
+.badge-blue{background:#d4e4ff;color:#1a56db;} .badge-green{background:#d1fae5;color:#166534;}
+.badge-yellow{background:#fef3c7;color:#92400e;} .badge-orange{background:#fed7aa;color:#9a3412;}
+.badge-red{background:#fecaca;color:#991b1b;} .badge-purple{background:#e9d5ff;color:#6b21a8;}
+.badge-pink{background:#fce7f3;color:#9d174d;} .badge-teal{background:#d1fae5;color:#065f46;}
+.badge-cyan{background:#d0f0fd;color:#0e7490;} .badge-gray{background:#e5e7eb;color:#374151;}
+.badge.field-empty { background:transparent; color:#bbb; padding-left:0; }
+.col-number,.col-currency { text-align:right; font-variant-numeric:tabular-nums; }
+.col-email { color:#166ee1; } .col-phone { font-variant-numeric:tabular-nums; }
+
+/* LISTE */
+.list-tabs { display:flex; padding:0 20px; border-bottom:1px solid #e5e5e5; background:#fff; flex-wrap:wrap; }
+.list-tab { padding:10px 16px; border:none; background:transparent; color:#666; font-size:13px; cursor:pointer; border-bottom:2px solid transparent; }
+.list-tab:hover { color:#333; }
+.list-tab.active { color:#166ee1; font-weight:500; border-bottom-color:#166ee1; }
+.list-table-wrapper { overflow-x:auto; }
+.list-table { width:100%; border-collapse:collapse; font-size:13px; }
+.list-table thead th { padding:8px 12px; text-align:left; font-weight:500; font-size:11px; color:#999; text-transform:uppercase; letter-spacing:.3px; border-bottom:1px solid #e5e5e5; background:#fafafa; white-space:nowrap; position:sticky; top:0; z-index:1; }
+.list-table tbody tr { border-bottom:1px solid #f0f0f0; height:38px; transition:background .1s; cursor:pointer; }
+.list-table tbody tr:hover { background:#f8f9ff; }
+.list-table tbody td { padding:8px 12px; vertical-align:middle; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px; }
+.col-checkbox { width:40px; text-align:center; }
+.col-primary { font-weight:500; color:#166ee1; }
+.list-table tbody tr:hover .col-primary { text-decoration:underline; }
+.field-icon { color:#bbb; margin-right:5px; font-weight:400; }
+.list-footer { padding:10px 20px; border-top:1px solid #e5e5e5; font-size:12px; color:#999; background:#fafafa; }
+
+/* KANBAN */
+.kanban-board { display:flex; gap:12px; align-items:flex-start; padding-bottom:20px; }
+.kanban-column { min-width:272px; max-width:272px; display:flex; flex-direction:column; gap:8px; }
+.kanban-column-header { display:flex; align-items:center; gap:8px; padding:4px 0; }
+.kanban-count { font-size:12px; color:#999; font-weight:500; }
+.kanban-sum { font-size:11px; color:#bbb; margin-left:auto; font-variant-numeric:tabular-nums; }
+.kanban-cards { display:flex; flex-direction:column; gap:8px; }
+.kanban-card { background:#fff; border-radius:8px; padding:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); border:1px solid #e8e8e8; cursor:pointer; transition:box-shadow .15s; }
+.kanban-card:hover { box-shadow:0 2px 8px rgba(0,0,0,.12); }
+.kanban-card-title { font-size:14px; font-weight:500; color:#333; margin-bottom:8px; }
+.kanban-card-field { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; gap:8px; }
+.kanban-card-label { font-size:11px; color:#999; text-transform:uppercase; letter-spacing:.3px; }
+.kanban-card-value { font-size:13px; color:#333; text-align:right; }
+.kanban-card-badges { display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
+.kanban-card-motif { margin-top:8px; padding-top:8px; border-top:1px solid #f0f0f0; font-size:12px; color:#777; line-height:1.45; white-space:normal; }
+.kanban-column-add { min-width:40px; max-width:40px; display:flex; align-items:flex-start; justify-content:center; padding-top:8px; color:#999; font-size:18px; cursor:pointer; }
+
+/* DASHBOARD */
+.dashboard-group-title { font-size:12px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:.8px; margin:4px 0 14px; padding-left:10px; border-left:3px solid #F5C518; }
+.dashboard-group { margin-bottom:32px; }
+.kpi-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:16px; margin-bottom:20px; }
+.kpi-row-3 { grid-template-columns:repeat(3,1fr); }
+.kpi-card { background:#fff; border:1px solid #e5e5e5; border-radius:8px; padding:16px 20px; }
+.kpi-label { font-size:13px; font-weight:600; color:#333; margin-bottom:2px; }
+.kpi-sublabel { font-size:11px; color:#999; margin-bottom:8px; }
+.kpi-value { font-size:30px; font-weight:700; color:#333; font-variant-numeric:tabular-nums; }
+.kpi-value.kpi-alert { color:#b91c1c; }
+.dashboard-card { background:#fff; border:1px solid #e5e5e5; border-radius:8px; margin-bottom:20px; overflow:hidden; }
+.dashboard-card-header { display:flex; justify-content:space-between; align-items:center; padding:14px 20px; border-bottom:1px solid #f0f0f0; }
+.dashboard-card-title { font-size:14px; font-weight:600; color:#333; }
+.dashboard-card-sub { font-size:11px; color:#aaa; font-weight:400; margin-left:8px; }
+.dashboard-card-expand { color:#999; cursor:pointer; font-size:14px; }
+.chart-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; align-items:start; }
+.chart-card { margin-bottom:0; }
+.bar-chart { padding:20px; display:flex; flex-direction:column; gap:12px; }
+.bar-item { display:flex; align-items:center; gap:12px; }
+.bar-label { width:155px; font-size:12px; color:#666; text-align:right; flex-shrink:0; }
+.bar-track { flex:1; height:22px; background:#f0f0f0; border-radius:4px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:4px; }
+.bar-value { width:86px; font-size:12px; color:#333; font-weight:500; font-variant-numeric:tabular-nums; text-align:right; }
+.pie-chart-container { display:flex; align-items:center; gap:28px; padding:20px; }
+.pie-chart { width:168px; height:168px; border-radius:50%; flex-shrink:0; position:relative; }
+.pie-chart::after { content:""; position:absolute; inset:30%; background:#fff; border-radius:50%; }
+.pie-legend { display:flex; flex-direction:column; gap:7px; }
+.pie-legend-item { display:flex; align-items:center; gap:8px; font-size:12px; color:#666; }
+.pie-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.entry-list { padding:6px 0; }
+.entry-row { display:flex; align-items:center; gap:12px; padding:10px 20px; border-bottom:1px solid #f4f4f4; cursor:pointer; }
+.entry-row:last-child { border-bottom:none; }
+.entry-row:hover { background:#f8f9ff; }
+.entry-color { width:4px; align-self:stretch; border-radius:2px; flex-shrink:0; }
+.entry-main { flex:1; min-width:0; }
+.entry-title { font-size:13px; font-weight:500; color:#166ee1; }
+.entry-sub { font-size:12px; color:#999; margin-top:2px; }
+.entry-side { font-size:13px; color:#333; font-variant-numeric:tabular-nums; text-align:right; flex-shrink:0; }
+
+/* CALENDRIER */
+.cal-nav { display:flex; justify-content:space-between; align-items:center; padding:14px 20px; border-bottom:1px solid #e5e5e5; background:#fff; }
+.cal-month-title { font-size:18px; font-weight:600; color:#333; text-transform:capitalize; }
+.cal-nav-right { display:flex; align-items:center; gap:8px; }
+.cal-nav-btn { padding:5px 12px; border:1px solid #ddd; background:#fff; border-radius:4px; font-size:13px; color:#666; cursor:pointer; }
+.cal-nav-btn:hover { background:#f5f5f5; }
+.cal-view-select { padding:5px 10px; border:1px solid #ddd; border-radius:4px; font-size:13px; color:#666; background:#fff; }
+.cal-unscheduled { padding:8px 20px; background:#fafafa; border-bottom:1px solid #e5e5e5; font-size:12px; color:#166ee1; cursor:pointer; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); border-left:1px solid #e5e5e5; }
+.cal-header-cell { padding:8px 12px; text-align:center; font-size:12px; font-weight:500; color:#999; text-transform:capitalize; border-bottom:1px solid #e5e5e5; border-right:1px solid #e5e5e5; background:#fafafa; }
+.cal-cell { min-height:104px; padding:4px 6px; border-bottom:1px solid #e5e5e5; border-right:1px solid #e5e5e5; background:#fff; }
+.cal-cell-other { background:#fafafa; }
+.cal-cell-other .cal-day-number { color:#ccc; }
+.cal-cell-weekend { background:#fafafa; }
+.cal-cell-today { background:#f0f7ff; }
+.cal-day-number { display:block; text-align:right; font-size:12px; color:#666; padding:2px 4px; }
+.cal-today-number { background:#166ee1; color:#fff; border-radius:50%; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; float:right; font-size:11px; }
+.cal-event { display:block; padding:3px 6px; border-radius:4px; font-size:11px; margin-top:3px; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1.35; }
+.cal-event-blue { background:#d4e4ff; color:#1a56db; border-left:3px solid #166ee1; }
+.cal-event-orange { background:#fed7aa; color:#9a3412; border-left:3px solid #f59e0b; }
+.cal-event-green { background:#e9d5ff; color:#6b21a8; border-left:3px solid #8b5cf6; }
+
+/* FICHE ENTRÉE */
+.record-modal { position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center; }
+.record-modal.open { display:flex; }
+.record-modal-overlay { position:absolute; inset:0; background:rgba(0,0,0,.42); }
+.record-modal-content { position:relative; width:92vw; max-width:920px; height:90vh; background:#fff; border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,.2); display:flex; flex-direction:column; overflow:hidden; }
+.record-modal-header { display:flex; align-items:center; justify-content:space-between; padding:14px 24px; border-bottom:1px solid #e5e5e5; flex-shrink:0; }
+.record-modal-back { border:none; background:transparent; color:#166ee1; font-size:13px; cursor:pointer; padding:4px 8px; border-radius:4px; }
+.record-modal-back:hover { background:#f0f7ff; }
+.record-modal-titlewrap { flex:1; text-align:center; padding:0 12px; }
+.record-modal-title { font-size:20px; font-weight:700; color:#333; }
+.record-modal-header-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.detail-panel-close { border:none; background:transparent; font-size:16px; color:#999; cursor:pointer; padding:4px 8px; border-radius:4px; }
+.detail-panel-close:hover { background:#f2f2f2; }
+.record-modal-body { flex:1; overflow-y:auto; padding:22px 30px 30px; }
+.detail-section { margin-bottom:26px; }
+.detail-section-title { font-size:12px; font-weight:600; color:#999; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; padding-bottom:6px; border-bottom:1px solid #f0f0f0; }
+.detail-row { display:flex; align-items:flex-start; padding:7px 0; border-bottom:1px solid #f6f6f6; }
+.detail-row:last-child { border-bottom:none; }
+.detail-row-label { width:210px; min-width:210px; font-size:12px; color:#888; padding-top:7px; }
+.detail-row-value { flex:1; min-width:0; font-size:13px; color:#333; }
+.detail-section-empty { font-size:12px; color:#aaa; font-style:italic; padding:10px 0 2px; }
+.detail-linked-record { display:inline-block; padding:2px 8px; margin:2px 4px 2px 0; background:#e8f0fe; color:#166ee1; border-radius:4px; font-size:12px; cursor:pointer; }
+.detail-linked-record:hover { background:#d4e4ff; }
+.field-attachment { display:inline-block; padding:3px 8px; background:#f2f2f2; border-radius:4px; font-size:12px; color:#555; }
+.field-select { position:relative; }
+.field-select-value { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:4px 8px; border-radius:6px; border:1px solid transparent; cursor:pointer; min-height:30px; transition:border-color .15s; }
+.field-select-value:hover { border-color:#ddd; background:#fafafa; }
+.field-select-arrow { font-size:10px; color:#999; margin-left:auto; }
+.field-select-dropdown { display:none; position:absolute; top:calc(100% + 4px); left:0; min-width:230px; background:#fff; border:1px solid #e0e0e0; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.12); z-index:300; padding:4px; max-height:250px; overflow-y:auto; }
+.field-select-dropdown.open { display:block; }
+.field-select-option { padding:6px 10px; border-radius:6px; cursor:pointer; font-size:13px; color:#333; }
+.field-select-option:hover { background:#f5f5f5; }
+.field-select-option.selected { background:#f0f7ff; }
+.field-text { cursor:text; padding:4px 8px; border-radius:6px; border:1px solid transparent; min-height:28px; transition:border-color .15s; }
+.field-text:hover { border-color:#ddd; background:#fafafa; }
+.field-text-input { width:100%; border:none; outline:none; font-size:13px; font-family:inherit; background:transparent; color:#333; }
+.field-textarea { cursor:text; padding:4px 8px; border-radius:6px; border:1px solid transparent; }
+.field-textarea:hover { border-color:#ddd; background:#fafafa; }
+.field-textarea-display { font-size:13px; color:#555; white-space:pre-wrap; line-height:1.5; }
+.field-textarea-input { width:100%; border:1px solid #166ee1; outline:none; font-size:13px; font-family:inherit; background:#fff; border-radius:4px; padding:6px 8px; resize:vertical; color:#333; }
+.field-checkbox-label { display:flex; align-items:center; gap:8px; cursor:pointer; padding:5px 8px; }
+.field-checkbox-input { width:16px; height:16px; cursor:pointer; accent-color:#166ee1; }
+.field-readonly { padding:4px 8px; font-size:13px; color:#555; background:#f6f6f6; border-radius:6px; display:inline-block; }
+.field-readonly-icon { color:#bbb; margin-right:5px; }
+.field-add-link { display:inline-block; padding:3px 9px; margin:2px 0; border:1px dashed #ccc; background:transparent; color:#999; border-radius:4px; font-size:12px; cursor:pointer; }
+.field-add-link:hover { border-color:#166ee1; color:#166ee1; background:#f0f7ff; }
+.linked-card { background:#fafafa; border:1px solid #e5e5e5; border-radius:8px; padding:11px 14px; margin-bottom:8px; display:flex; flex-direction:column; gap:5px; cursor:pointer; }
+.linked-card:hover { border-color:#d0d0d0; background:#f5f5f5; }
+.linked-card-title { font-size:13px; font-weight:600; color:#166ee1; }
+.linked-card-field { font-size:12px; color:#666; line-height:1.5; }
+
+.maquette-footer { padding:10px 20px; background:#fff; border-top:1px solid #e5e5e5; font-size:11px; color:#aaa; font-style:italic; text-align:center; flex-shrink:0; }
+
+@media print {
+    @page { size:A4 landscape; margin:10mm; }
+    * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+    body.has-disclaimer { padding-top:0; }
+    .disclaimer-banner,.sidebar,.header-right,.kanban-column-add,.dashboard-card-expand { display:none !important; }
+    .app-layout, body.has-disclaimer .app-layout { height:auto; display:block; overflow:visible; }
+    .main-area { overflow:visible; }
+    .page { display:none !important; }
+    .page.active { display:block !important; height:auto; overflow:visible; }
+    .content-area { overflow:visible !important; }
+    .page-header { border-bottom:2px solid #333; }
+    .kanban-board { flex-wrap:wrap; }
+    .kanban-column,.dashboard-card,.kpi-card,.linked-card { break-inside:avoid; }
+    .record-modal { display:none !important; }
+    .maquette-footer { border-top:1px solid #999; color:#666; }
+}
+.view-select { padding:5px 10px; border:1px solid #ddd; border-radius:4px; font-size:13px; color:#333; background:#fff; font-weight:500; cursor:pointer; }
+.cal-event-purple { background:#e9d5ff; color:#6b21a8; border-left:3px solid #8b5cf6; }
+</style>
+</head>
+<body class="has-disclaimer">
+
+<div class="disclaimer-banner">Interfaces à usage visuel uniquement - Aperçu non fonctionnel, données fictives</div>
+
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-logo">🔷</span>
+            <span class="sidebar-app-name">Herrikoa</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-group">
+                <div class="sidebar-group-title"><span class="sidebar-group-chevron">▾</span>Pilotage</div>
+                <a class="sidebar-item active" data-page="page-tb-portefeuille" onclick="showPage('page-tb-portefeuille',this)">Tableau de bord portefeuille</a>
+                <a class="sidebar-item" data-page="page-tb-prospection" onclick="showPage('page-tb-prospection',this)">Tableau de bord prospection</a>
+                <a class="sidebar-item" data-page="page-tb-contacts" onclick="showPage('page-tb-contacts',this)">Tableau de bord contacts</a>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-group-title"><span class="sidebar-group-chevron">▾</span>Participations</div>
+                <a class="sidebar-item" data-page="page-pipe" onclick="showPage('page-pipe',this)">Pipe prospects</a>
+                <a class="sidebar-item" data-page="page-entreprises" onclick="showPage('page-entreprises',this)">Liste des entreprises</a>
+                <a class="sidebar-item" data-page="page-contacts-part" onclick="showPage('page-contacts-part',this)">Liste des contacts</a>
+                <a class="sidebar-item" data-page="page-ops" onclick="showPage('page-ops',this)">Opérations de financement</a>
+                <a class="sidebar-item" data-page="page-ags" onclick="showPage('page-ags',this)">AG des entreprises</a>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-group-title"><span class="sidebar-group-chevron">▾</span>Actionnaires</div>
+                <a class="sidebar-item" data-page="page-actionnaires" onclick="showPage('page-actionnaires',this)">Liste des actionnaires</a>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-group-title"><span class="sidebar-group-chevron">▾</span>Partenaires</div>
+                <a class="sidebar-item" data-page="page-org-part" onclick="showPage('page-org-part',this)">Liste des entreprises partenaires</a>
+                <a class="sidebar-item" data-page="page-ct-part" onclick="showPage('page-ct-part',this)">Liste des contacts partenaires</a>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-group-title"><span class="sidebar-group-chevron">▾</span>Institutionnels</div>
+                <a class="sidebar-item" data-page="page-org-inst" onclick="showPage('page-org-inst',this)">Liste des entreprises institutionnels</a>
+                <a class="sidebar-item" data-page="page-ct-inst" onclick="showPage('page-ct-inst',this)">Liste des contacts institutionnels</a>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-group-title"><span class="sidebar-group-chevron">▾</span>Communication</div>
+                <a class="sidebar-item" data-page="page-publications" onclick="showPage('page-publications',this)">Liste des publications LinkedIn</a>
+                <a class="sidebar-item" data-page="page-evenements" onclick="showPage('page-evenements',this)">Liste des évènements</a>
+                <a class="sidebar-item" data-page="page-calendrier" onclick="showPage('page-calendrier',this)">Calendrier</a>
+            </div>
+        </nav>
+        <div class="sidebar-footer"><span>👤</span><span>Partager</span></div>
+    </aside>
+
+    <main class="main-area">
+
+    <section class="page active" id="page-tb-portefeuille">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Pilotage</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Tableau de bord portefeuille</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn-icon">🔍</button></div>
+        </header>
+        <div class="content-area content-dashboard">
+            <div class="dashboard-group">
+                <div class="dashboard-group-title">Portefeuille · source : Entreprises</div>
+                <div class="kpi-row kpi-row-3">
+                    <div class="kpi-card"><div class="kpi-label">Participations actives</div><div class="kpi-sublabel">Statut = Portefeuille</div><div class="kpi-value">68</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Montant total engagé</div><div class="kpi-sublabel">Somme des opérations en cours</div><div class="kpi-value">3 420 000 €</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Durée moyenne de détention</div><div class="kpi-sublabel">Moyenne du champ Durée de détention</div><div class="kpi-value">5,4 ans</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Emplois soutenus</div><div class="kpi-sublabel">Somme Emplois créés / maintenus</div><div class="kpi-value">1 240</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Entreprises à surveiller</div><div class="kpi-sublabel">Vigilance ≠ Normal</div><div class="kpi-value kpi-alert">7</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Investissements réalisés</div><div class="kpi-sublabel">Cette année</div><div class="kpi-value">6</div></div>
+                </div>
+                <div class="chart-row">
+                    <div class="dashboard-card chart-card">
+                        <div class="dashboard-card-header"><h3 class="dashboard-card-title">Montants engagés par instrument<span class="dashboard-card-sub">Graphique · Barre</span></h3><span class="dashboard-card-expand">↗</span></div>
+                        <div class="bar-chart">
+                            <div class="bar-item"><div class="bar-label">Capital</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#166ee1;"></div></div><div class="bar-value">1 640 000 €</div></div>
+                            <div class="bar-item"><div class="bar-label">Compte courant d'associé</div><div class="bar-track"><div class="bar-fill" style="width:47.6%;background:#166ee1;"></div></div><div class="bar-value">780 000 €</div></div>
+                            <div class="bar-item"><div class="bar-label">Obligations convertibles</div><div class="bar-track"><div class="bar-fill" style="width:30.2%;background:#166ee1;"></div></div><div class="bar-value">495 000 €</div></div>
+                            <div class="bar-item"><div class="bar-label">Prêt participatif</div><div class="bar-track"><div class="bar-fill" style="width:20.7%;background:#166ee1;"></div></div><div class="bar-value">340 000 €</div></div>
+                            <div class="bar-item"><div class="bar-label">Titres participatifs</div><div class="bar-track"><div class="bar-fill" style="width:10.1%;background:#166ee1;"></div></div><div class="bar-value">165 000 €</div></div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card chart-card">
+                        <div class="dashboard-card-header"><h3 class="dashboard-card-title">Répartition du portefeuille par secteur<span class="dashboard-card-sub">Graphique · Donut</span></h3><span class="dashboard-card-expand">↗</span></div>
+                        <div class="pie-chart-container">
+                            <div class="pie-chart" style="background:conic-gradient(#166ee1 0% 23.5%,#10b981 23.5% 42.6%,#f59e0b 42.6% 58.8%,#ef4444 58.8% 72.0%,#8b5cf6 72.0% 82.3%,#06b6d4 82.3% 91.1%,#ec4899 91.1% 97.0%,#64748b 97.0% 100%);"></div>
+                            <div class="pie-legend">
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#166ee1;"></span><span>Industrie (16)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#10b981;"></span><span>Agroalimentaire (13)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#f59e0b;"></span><span>Services (11)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#ef4444;"></span><span>Artisanat (9)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#8b5cf6;"></span><span>Commerce (7)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#06b6d4;"></span><span>Numérique (6)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#ec4899;"></span><span>Tourisme (4)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#64748b;"></span><span>BTP (2)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-row">
+                    <div class="dashboard-card chart-card">
+                        <div class="dashboard-card-header"><h3 class="dashboard-card-title">Entreprises à surveiller<span class="dashboard-card-sub">Liste d'entrées · 3 champs</span></h3><span class="dashboard-card-expand">↗</span></div>
+                        <div class="entry-list" id="entry-surveiller"></div>
+                    </div>
+                    <div class="dashboard-card chart-card">
+                        <div class="dashboard-card-header"><h3 class="dashboard-card-title">Répartition géographique<span class="dashboard-card-sub">Graphique · Barre</span></h3><span class="dashboard-card-expand">↗</span></div>
+                        <div class="bar-chart">
+                            <div class="bar-item"><div class="bar-label">Pyrénées-Atlantiques</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#10b981;"></div></div><div class="bar-value">47</div></div>
+                            <div class="bar-item"><div class="bar-label">Landes</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:#10b981;"></div></div><div class="bar-value">16</div></div>
+                            <div class="bar-item"><div class="bar-label">Autre</div><div class="bar-track"><div class="bar-fill" style="width:10.6%;background:#10b981;"></div></div><div class="bar-value">5</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-tb-prospection">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Pilotage</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Tableau de bord prospection</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn-icon">🔍</button></div>
+        </header>
+        <div class="content-area content-dashboard">
+            <div class="dashboard-group">
+                <div class="dashboard-group-title">Prospection · source : Entreprises (dossiers en cours)</div>
+                <div class="kpi-row kpi-row-3">
+                    <div class="kpi-card"><div class="kpi-label">Dossiers en cours</div><div class="kpi-sublabel">Contact → Conseil de surveillance</div><div class="kpi-value">18</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Montant sollicité cumulé</div><div class="kpi-sublabel">Somme des dossiers en cours</div><div class="kpi-value">940 000 €</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Taux de transformation</div><div class="kpi-sublabel">Sur 12 mois glissants</div><div class="kpi-value">22 %</div></div>
+                </div>
+                <div class="chart-row">
+                    <div class="dashboard-card chart-card">
+                        <div class="dashboard-card-header"><h3 class="dashboard-card-title">Dossiers par étape<span class="dashboard-card-sub">Graphique · Barre</span></h3><span class="dashboard-card-expand">↗</span></div>
+                        <div class="bar-chart" id="chart-pipe"></div>
+                    </div>
+                    <div class="dashboard-card chart-card">
+                        <div class="dashboard-card-header"><h3 class="dashboard-card-title">Origine des dossiers<span class="dashboard-card-sub">Graphique · Donut</span></h3><span class="dashboard-card-expand">↗</span></div>
+                        <div class="pie-chart-container">
+                            <div class="pie-chart" style="background:conic-gradient(#166ee1 0% 27.8%,#06b6d4 27.8% 55.6%,#10b981 55.6% 72.3%,#f59e0b 72.3% 83.4%,#8b5cf6 83.4% 100%);"></div>
+                            <div class="pie-legend">
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#166ee1;"></span><span>Réseau (5)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#06b6d4;"></span><span>Prescripteur (5)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#10b981;"></span><span>Site web (3)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#f59e0b;"></span><span>Spontané (2)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#8b5cf6;"></span><span>Partenaire (3)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-tb-contacts">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Pilotage</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Tableau de bord contacts</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn-icon">🔍</button></div>
+        </header>
+        <div class="content-area content-dashboard">
+            <div class="dashboard-group">
+                <div class="dashboard-group-title">Base contacts · source : Contacts</div>
+                <div class="kpi-row">
+                    <div class="kpi-card"><div class="kpi-label">Contacts au total</div><div class="kpi-sublabel">Toutes sources confondues</div><div class="kpi-value">5 840</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Avec e-mail valide</div><div class="kpi-sublabel">Statut e-mail = Valide</div><div class="kpi-value">2 310</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Doublons fusionnés</div><div class="kpi-sublabel">Depuis la reprise Access et Outlook</div><div class="kpi-value">412</div></div>
+                    <div class="kpi-card"><div class="kpi-label">À vérifier</div><div class="kpi-sublabel">Statut e-mail = À vérifier</div><div class="kpi-value kpi-alert">86</div></div>
+                </div>
+                <div class="chart-row">
+                    <div class="dashboard-card chart-card">
+                        <div class="dashboard-card-header"><h3 class="dashboard-card-title">Répartition par type<span class="dashboard-card-sub">Graphique · Barre</span></h3><span class="dashboard-card-expand">↗</span></div>
+                        <div class="bar-chart" id="chart-contacts"></div>
+                    </div>
+                    <div class="dashboard-card chart-card">
+                        <div class="dashboard-card-header"><h3 class="dashboard-card-title">Origine des contacts<span class="dashboard-card-sub">Graphique · Donut</span></h3><span class="dashboard-card-expand">↗</span></div>
+                        <div class="pie-chart-container">
+                            <div class="pie-chart" style="background:conic-gradient(#64748b 0% 58.0%,#166ee1 58.0% 74.0%,#10b981 74.0% 88.0%,#f59e0b 88.0% 95.0%,#8b5cf6 95.0% 100%);"></div>
+                            <div class="pie-legend">
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#64748b;"></span><span>Access (3 387)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#166ee1;"></span><span>Outlook (934)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#10b981;"></span><span>Participation (818)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#f59e0b;"></span><span>Formulaire site (409)</span></div>
+                                <div class="pie-legend-item"><span class="pie-dot" style="background:#8b5cf6;"></span><span>Saisie manuelle (292)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-pipe">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Participations</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Pipe prospects</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter un dossier</button></div>
+        </header>
+        <div class="content-area content-kanban"><div class="kanban-board" id="kanban-board"></div></div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-entreprises">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Participations</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Liste des entreprises</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter une entreprise</button></div>
+        </header>
+        <div class="list-tabs">
+            <button class="list-tab active" onclick="filterTab(this,'tbl-entreprises','all')">Toutes</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-entreprises','Normal')">Normal</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-entreprises','À surveiller')">À surveiller</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-entreprises','Difficulté')">Difficulté</button>
+        </div>
+        <div class="content-area content-white">
+            <div class="list-table-wrapper"><table class="list-table" id="tbl-entreprises"></table></div>
+            <div class="list-footer" id="cnt-entreprises"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-contacts-part">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Participations</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Liste des contacts</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter un contact</button></div>
+        </header>
+        <div class="list-tabs">
+            <button class="list-tab active" onclick="filterTab(this,'tbl-contacts-part','Prospect')">Prospects</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-contacts-part','Membre')">Membres</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-contacts-part','Ancien membre')">Anciens membres</button>
+        </div>
+        <div class="content-area content-white">
+            <div class="list-table-wrapper"><table class="list-table" id="tbl-contacts-part"></table></div>
+            <div class="list-footer" id="cnt-contacts-part"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-ops">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Participations</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Opérations de financement</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter une opération</button></div>
+        </header>
+        <div class="list-tabs">
+            <button class="list-tab active" onclick="filterTab(this,'tbl-ops','all')">Toutes</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-ops','Capital')">Capital</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-ops','Compte courant d'associé')">Compte courant d'associé</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-ops','Obligations convertibles')">Obligations convertibles</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-ops','Prêt participatif')">Prêt participatif</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-ops','Titres participatifs')">Titres participatifs</button>
+        </div>
+        <div class="content-area content-white">
+            <div class="list-table-wrapper"><table class="list-table" id="tbl-ops"></table></div>
+            <div class="list-footer" id="cnt-ops"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-ags">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Participations</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">AG des entreprises</span></span></div>
+            <div class="header-right">
+                <select class="view-select" onchange="switchVueAG(this)">
+                    <option value="liste" selected>Vue Liste</option>
+                    <option value="calendrier">Vue Calendrier</option>
+                </select>
+                <button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter une AG</button>
+            </div>
+        </header>
+        <div class="list-tabs" id="ag-tabs">
+            <button class="list-tab active" onclick="filterTab(this,'tbl-ags','all')">Toutes</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-ags','À planifier')">À planifier</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-ags','Confirmée')">Confirmée</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-ags','Réalisée')">Réalisée</button>
+        </div>
+        <div class="content-area content-white">
+            <div id="ag-liste">
+                <div class="list-table-wrapper"><table class="list-table" id="tbl-ags"></table></div>
+                <div class="list-footer" id="cnt-ags"></div>
+            </div>
+            <div id="ag-calendrier" style="display:none">
+                <div class="cal-nav">
+                    <h2 class="cal-month-title">septembre 2026</h2>
+                    <div class="cal-nav-right"><button class="cal-nav-btn">◀</button><button class="cal-nav-btn">▶</button><button class="cal-nav-btn">Aujourd'hui</button></div>
+                </div>
+                <div class="cal-grid">
+                    <div class="cal-header-cell">lun.</div><div class="cal-header-cell">mar.</div><div class="cal-header-cell">mer.</div>
+                    <div class="cal-header-cell">jeu.</div><div class="cal-header-cell">ven.</div><div class="cal-header-cell">sam.</div>
+                    <div class="cal-header-cell">dim.</div>
+                </div>
+                <div class="cal-grid" id="cal-ag-days"></div>
+            </div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-actionnaires">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Actionnaires</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Liste des actionnaires</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter un actionnaire</button></div>
+        </header>
+        <div class="list-tabs">
+            <button class="list-tab active" onclick="filterTab(this,'tbl-actionnaires','all')">Tous</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-actionnaires','Inscrit')">Inscrits à l'AG</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-actionnaires','Non inscrit')">Non inscrits</button>
+        </div>
+        <div class="content-area content-white">
+            <div class="list-table-wrapper"><table class="list-table" id="tbl-actionnaires"></table></div>
+            <div class="list-footer" id="cnt-actionnaires"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-org-part">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Partenaires</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Liste des entreprises partenaires</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter une entreprise</button></div>
+        </header>
+        <div class="content-area content-white">
+            <div class="list-table-wrapper"><table class="list-table" id="tbl-org-part"></table></div>
+            <div class="list-footer" id="cnt-org-part"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-ct-part">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Partenaires</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Liste des contacts partenaires</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter un contact</button></div>
+        </header>
+        <div class="content-area content-white">
+            <div class="list-table-wrapper"><table class="list-table" id="tbl-ct-part"></table></div>
+            <div class="list-footer" id="cnt-ct-part"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-org-inst">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Institutionnels</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Liste des entreprises institutionnels</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter une entreprise</button></div>
+        </header>
+        <div class="content-area content-white">
+            <div class="list-table-wrapper"><table class="list-table" id="tbl-org-inst"></table></div>
+            <div class="list-footer" id="cnt-org-inst"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-ct-inst">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Institutionnels</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Liste des contacts institutionnels</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter un contact</button></div>
+        </header>
+        <div class="content-area content-white">
+            <div class="list-table-wrapper"><table class="list-table" id="tbl-ct-inst"></table></div>
+            <div class="list-footer" id="cnt-ct-inst"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-publications">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Communication</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Liste des publications LinkedIn</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Créer un post</button></div>
+        </header>
+        <div class="list-tabs">
+            <button class="list-tab active" onclick="filterTab(this,'tbl-publications','all')">Toutes les publications</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-publications','Herrikoa')">Herrikoa</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-publications','Clémence')">Clémence</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-publications','Non applicable')">Non applicable</button>
+        </div>
+        <div class="content-area content-white">
+            <div class="list-table-wrapper"><table class="list-table" id="tbl-publications"></table></div>
+            <div class="list-footer" id="cnt-publications"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-evenements">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Communication</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Liste des évènements</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn">Trier</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter un évènement</button></div>
+        </header>
+        <div class="list-tabs">
+            <button class="list-tab active" onclick="filterTab(this,'tbl-evenements','all')">Tous les évènements</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-evenements','En préparation')">En préparation</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-evenements','Invitations envoyées')">Invitations envoyées</button>
+            <button class="list-tab" onclick="filterTab(this,'tbl-evenements','Clôturé')">Clôturé</button>
+        </div>
+        <div class="content-area content-white">
+            <div class="list-table-wrapper"><table class="list-table" id="tbl-evenements"></table></div>
+            <div class="list-footer" id="cnt-evenements"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    <section class="page" id="page-calendrier">
+        <header class="page-header">
+            <div><span class="breadcrumb"><span>Communication</span><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Calendrier</span></span></div>
+            <div class="header-right"><button class="header-btn">Filtre</button><button class="header-btn-icon">🔍</button><button class="btn-primary">Ajouter publication</button></div>
+        </header>
+        <div class="content-area content-white">
+            <div class="cal-nav">
+                <h2 class="cal-month-title">août 2026</h2>
+                <div class="cal-nav-right"><button class="cal-nav-btn">◀</button><button class="cal-nav-btn">▶</button><button class="cal-nav-btn">Aujourd'hui</button>
+                <select class="cal-view-select"><option selected>Mois</option><option>Semaine</option></select></div>
+            </div>
+            <div class="cal-unscheduled" id="cal-unscheduled"></div>
+            <div class="cal-grid">
+                <div class="cal-header-cell">lun.</div><div class="cal-header-cell">mar.</div><div class="cal-header-cell">mer.</div>
+                <div class="cal-header-cell">jeu.</div><div class="cal-header-cell">ven.</div><div class="cal-header-cell">sam.</div>
+                <div class="cal-header-cell">dim.</div>
+            </div>
+            <div class="cal-grid" id="cal-days"></div>
+        </div>
+<div class="maquette-footer">Maquette de présentation - Doctor IA pour Herrikoa - les données affichées sont fictives et destinées à illustrer la structure de l'outil.</div>
+    </section>
+
+    </main>
+</div>
+
+<div class="record-modal" id="fiche-modal">
+    <div class="record-modal-overlay" onclick="closeFiche()"></div>
+    <div class="record-modal-content">
+        <div class="record-modal-header">
+            <div><button class="record-modal-back" onclick="closeFiche()">← Retour</button></div>
+            <div class="record-modal-titlewrap"><span class="record-modal-title" id="fiche-title"></span></div>
+            <div class="record-modal-header-actions"><button class="btn-primary">Modifier</button><button class="detail-panel-close" onclick="closeFiche()">✕</button></div>
+        </div>
+        <div class="record-modal-body" id="fiche-body"></div>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+   DONNÉES ET SCHÉMA - maquette Herrikoa
+   Champs issus du CDC §4.1 à §4.7, plus les ajouts validés :
+   - Contacts : Statut entreprise (lookup), Organisation (lien), AG Herrikoa (sélection)
+   - Organisations : nouvelle table (Nom, Adresse, Code postal, Ville, Type)
+   ============================================================ */
+var B = {
+  secteur:   { "Industrie":"blue","Agroalimentaire":"green","Artisanat":"red","Services":"orange",
+               "Commerce":"purple","Numérique":"cyan","Tourisme":"pink","BTP":"gray" },
+  statutEnt: { "Contact":"gray","Rencontre":"cyan","Étude":"blue","Comité technique":"purple",
+               "Conseil de surveillance":"orange","Portefeuille":"green","Arrêté":"red","Sorti":"gray" },
+  dept:      { "Pyrénées-Atlantiques":"teal","Landes":"cyan","Autre":"gray" },
+  vigilance: { "Normal":"green","À surveiller":"orange","Difficulté":"red" },
+  origine:   { "Réseau":"blue","Prescripteur":"cyan","Site web":"teal","Spontané":"yellow","Partenaire":"purple" },
+  typeOp:    { "Capital":"blue","Compte courant d'associé":"cyan","Obligations convertibles":"purple",
+               "Prêt participatif":"teal","Titres participatifs":"orange" },
+  statutOp:  { "En cours":"blue","Remboursée":"green","Cédée":"gray" },
+  typeCt:    { "Dirigeant":"blue","Actionnaire":"purple","Prospect":"yellow","Partenaire":"teal","Institutionnel":"cyan" },
+  source:    { "Access":"gray","Outlook":"gray","Participation":"teal","Formulaire site":"blue","Saisie manuelle":"yellow" },
+  mail:      { "Valide":"green","Absent":"red","À vérifier":"yellow" },
+  rattach:   { "Prospect":"yellow","Membre":"green","Ancien membre":"gray" },
+  agH:       { "Inscrit":"green","Non inscrit":"red" },
+  typeOrg:   { "Actionnaire personne morale":"purple","Partenaire":"teal","Institutionnel":"cyan" },
+  typeNote:  { "Appel":"blue","Rendez-vous":"cyan","Comité":"purple","Point annuel":"green","Autre":"gray" },
+  auteur:    { "Clémence":"purple","Jérémy":"blue" },
+  repAG:     { "Clémence":"purple","Jérémy":"blue","Non couverte":"gray" },
+  statutAG:  { "À planifier":"yellow","Confirmée":"blue","Réalisée":"green" },
+  typePub:   { "Post LinkedIn":"blue","Événement":"purple" },
+  statutPost:{ "Idée":"gray","À rédiger":"yellow","Rédigé et à programmer":"orange","Programmé":"blue",
+               "Publié":"green","Non applicable":"gray" },
+  compte:    { "Herrikoa":"blue","Clémence":"purple","Non applicable":"gray" },
+  statutEv:  { "En préparation":"yellow","Invitations envoyées":"blue","Clôturé":"gray" }
+};
+var OPT = {
+  statutEnt: ["Contact","Rencontre","Étude","Comité technique","Conseil de surveillance","Portefeuille","Arrêté","Sorti"],
+  secteur:   ["Industrie","Agroalimentaire","Artisanat","Services","Commerce","Numérique","Tourisme","BTP"],
+  dept:      ["Pyrénées-Atlantiques","Landes","Autre"],
+  vigilance: ["Normal","À surveiller","Difficulté"],
+  origine:   ["Réseau","Prescripteur","Site web","Spontané","Partenaire"],
+  typeOp:    ["Capital","Compte courant d'associé","Obligations convertibles","Prêt participatif","Titres participatifs"],
+  statutOp:  ["En cours","Remboursée","Cédée"],
+  typeCt:    ["Dirigeant","Actionnaire","Prospect","Partenaire","Institutionnel"],
+  source:    ["Access","Outlook","Participation","Formulaire site","Saisie manuelle"],
+  mail:      ["Valide","Absent","À vérifier"],
+  agH:       ["Inscrit","Non inscrit"],
+  typeOrg:   ["Actionnaire personne morale","Partenaire","Institutionnel"],
+  typeNote:  ["Appel","Rendez-vous","Comité","Point annuel","Autre"],
+  auteur:    ["Clémence","Jérémy"],
+  repAG:     ["Clémence","Jérémy","Non couverte"],
+  statutAG:  ["À planifier","Confirmée","Réalisée"],
+  typePub:   ["Post LinkedIn","Événement"],
+  statutPost:["Idée","À rédiger","Rédigé et à programmer","Programmé","Publié","Non applicable"],
+  compte:    ["Herrikoa","Clémence","Non applicable"],
+  statutEv:  ["En préparation","Invitations envoyées","Clôturé"]
+};
+
+/* ---- ENTREPRISES (CDC §4.1) ---- */
+function E(n,se,c,d,st,co,ef,em,ca,en,du,mo,vi,or,mt,si,ds,su,ec) {
+  return {nom:n,secteur:se,commune:c,dept:d,statut:st,coord:co,effectif:ef,emplois:em,ca:ca,entree:en,
+          duree:du,montant:mo,vigilance:vi,origine:or,motif:mt,site:si,dossier:ds,dernierSuivi:su,echange:ec};
+}
+var ENTREPRISES = [
+ E("Alki","Artisanat","Larressore","Pyrénées-Atlantiques","Portefeuille","43.3556, -1.4322",62,38,"6 800 000 €","12/09/2018","7,9 ans","120 000 €","Normal","Réseau","","alki.fr","Dropbox / Participations / Alki","04/06/2026",""),
+ E("Lynxter","Industrie","Bayonne","Pyrénées-Atlantiques","Portefeuille","43.4832, -1.4746",34,21,"4 250 000 €","14/03/2022","4,4 ans","185 000 €","Normal","Prescripteur","","lynxter.fr","Dropbox / Participations / Lynxter","18/07/2026",""),
+ E("Wikicampers","Numérique","Bidart","Pyrénées-Atlantiques","Portefeuille","43.4383, -1.5919",28,17,"3 100 000 €","06/06/2019","7,2 ans","95 000 €","Normal","Site web","","wikicampers.fr","Dropbox / Participations / Wikicampers","21/05/2026",""),
+ E("Tekniaero","Industrie","Tarnos","Landes","Portefeuille","43.5397, -1.4636",47,30,"7 400 000 €","21/01/2021","5,5 ans","140 000 €","Normal","Partenaire","","tekniaero.fr","Dropbox / Participations / Tekniaero","26/06/2026",""),
+ E("Don Quichosse","Agroalimentaire","Saint-Sever","Landes","Portefeuille","43.7561, -0.5744",19,12,"2 250 000 €","18/10/2020","5,8 ans","70 000 €","Normal","Réseau","","donquichosse.fr","Dropbox / Participations / Don Quichosse","14/05/2026",""),
+ E("La Boîte Concept","Commerce","Anglet","Pyrénées-Atlantiques","Portefeuille","43.4831, -1.5153",14,9,"1 800 000 €","03/04/2023","3,3 ans","60 000 €","Normal","Prescripteur","","laboiteconcept.fr","Dropbox / Participations / La Boîte Concept","09/06/2026",""),
+ E("Ma Petite Sponso","Numérique","Biarritz","Pyrénées-Atlantiques","Portefeuille","43.4832, -1.5586",11,8,"920 000 €","29/11/2023","2,7 ans","45 000 €","Normal","Site web","","mapetitesponso.fr","Dropbox / Participations / Ma Petite Sponso","30/06/2026",""),
+ E("Pateco","Agroalimentaire","Hasparren","Pyrénées-Atlantiques","Portefeuille","43.3856, -1.3053",24,15,"3 600 000 €","07/07/2017","9,1 ans","88 000 €","Normal","Réseau","","pateco.fr","Dropbox / Participations / Pateco","12/05/2026",""),
+ E("Ilargi Composites","Industrie","Mouguerre","Pyrénées-Atlantiques","Portefeuille","43.4703, -1.4008",31,18,"2 900 000 €","15/05/2019","7,2 ans","95 000 €","Difficulté","Prescripteur","","ilargi-composites.fr","Dropbox / Participations / Ilargi Composites","22/07/2026",""),
+ E("Harri Agro","Agroalimentaire","Saint-Palais","Pyrénées-Atlantiques","Portefeuille","43.3272, -1.0400",22,13,"1 950 000 €","09/02/2020","6,5 ans","72 000 €","Difficulté","Partenaire","","harri-agro.fr","Dropbox / Participations / Harri Agro","15/07/2026",""),
+ E("Bidart Confection","Artisanat","Bidart","Pyrénées-Atlantiques","Portefeuille","43.4383, -1.5919",16,10,"1 320 000 €","24/06/2021","5,1 ans","48 000 €","À surveiller","Réseau","","bidart-confection.fr","Dropbox / Participations / Bidart Confection","09/07/2026",""),
+ E("Uhaina Marine","Tourisme","Ciboure","Pyrénées-Atlantiques","Portefeuille","43.3819, -1.6708",27,16,"2 400 000 €","11/03/2020","6,4 ans","85 000 €","À surveiller","Site web","","uhaina-marine.fr","Dropbox / Participations / Uhaina Marine","02/07/2026",""),
+ E("Errota Distribution","Commerce","Urrugne","Pyrénées-Atlantiques","Portefeuille","43.3556, -1.6989",12,7,"1 100 000 €","30/09/2022","3,8 ans","40 000 €","À surveiller","Spontané","","errota-distribution.fr","Dropbox / Participations / Errota Distribution","24/06/2026",""),
+ E("Sarea Numérique","Numérique","Anglet","Pyrénées-Atlantiques","Portefeuille","43.4831, -1.5153",18,11,"1 480 000 €","17/01/2023","3,5 ans","65 000 €","À surveiller","Prescripteur","","sarea-numerique.fr","Dropbox / Participations / Sarea Numérique","18/06/2026",""),
+ E("Landes Métal Process","BTP","Mont-de-Marsan","Landes","Portefeuille","43.8914, -0.4994",21,13,"2 050 000 €","05/11/2021","4,7 ans","55 000 €","À surveiller","Partenaire","","landes-metal.fr","Dropbox / Participations / Landes Métal Process","11/06/2026",""),
+ /* Sorties */
+ E("Aldudes Salaisons","Agroalimentaire","Les Aldudes","Pyrénées-Atlantiques","Sorti","43.0242, -1.4194",26,16,"2 800 000 €","04/05/2014","","110 000 €","Normal","Réseau","","aldudes-salaisons.fr","Dropbox / Participations / Aldudes Salaisons","18/02/2025",""),
+ E("Orthe Mécanique","Industrie","Peyrehorade","Landes","Sorti","43.5464, -1.1122",33,20,"3 400 000 €","22/09/2013","","95 000 €","Normal","Prescripteur","","orthe-mecanique.fr","Dropbox / Participations / Orthe Mécanique","09/11/2024",""),
+ /* Dossiers en cours */
+ E("Errobi Mécanique","Industrie","Itxassou","Pyrénées-Atlantiques","Contact","43.3306, -1.4058",12,0,"1 400 000 €","","","40 000 €","Normal","Site web","","errobi-mecanique.fr","","","28/07/2026"),
+ E("Tursan Volailles","Agroalimentaire","Geaune","Landes","Contact","43.6444, -0.3992",18,0,"2 100 000 €","","","55 000 €","Normal","Prescripteur","","tursan-volailles.fr","","","24/07/2026"),
+ E("Xareta Numérique","Numérique","Sare","Pyrénées-Atlantiques","Contact","43.3111, -1.5811",7,0,"540 000 €","","","30 000 €","Normal","Réseau","","xareta.fr","","","21/07/2026"),
+ E("Marensin Charpente","BTP","Léon","Landes","Contact","43.8778, -1.3050",23,0,"2 800 000 €","","","75 000 €","Normal","Spontané","","marensin-charpente.fr","","","17/07/2026"),
+ E("Gaztelu Traiteur","Commerce","Saint-Jean-de-Luz","Pyrénées-Atlantiques","Contact","43.3883, -1.6594",15,0,"1 250 000 €","","","45 000 €","Normal","Site web","","gaztelu-traiteur.fr","","","10/07/2026"),
+ E("Bidasoa Plasturgie","Industrie","Hendaye","Pyrénées-Atlantiques","Rencontre","43.3589, -1.7747",29,0,"3 400 000 €","","","70 000 €","Normal","Réseau","","bidasoa-plasturgie.fr","","","30/07/2026"),
+ E("Chalosse Fromages","Agroalimentaire","Amou","Landes","Rencontre","43.5906, -0.7458",11,0,"890 000 €","","","35 000 €","Normal","Partenaire","","chalosse-fromages.fr","","","23/07/2026"),
+ E("Itsas Logistique","Services","Bayonne","Pyrénées-Atlantiques","Rencontre","43.4933, -1.4750",38,0,"4 600 000 €","","","85 000 €","Normal","Prescripteur","","itsas-logistique.fr","","","16/07/2026"),
+ E("Hegoa Textile","Artisanat","Mauléon-Licharre","Pyrénées-Atlantiques","Rencontre","43.2278, -0.8811",17,0,"1 350 000 €","","","50 000 €","Normal","Réseau","","hegoa-textile.fr","","","09/07/2026"),
+ E("Anaia Robotique","Numérique","Anglet","Pyrénées-Atlantiques","Étude","43.4831, -1.5153",14,0,"1 150 000 €","","","60 000 €","Normal","Prescripteur","","anaia-robotique.fr","","","31/07/2026"),
+ E("Baigura Énergies","Services","Hélette","Pyrénées-Atlantiques","Étude","43.3006, -1.2308",26,0,"3 050 000 €","","","95 000 €","Normal","Partenaire","","baigura-energies.fr","","","27/07/2026"),
+ E("Larrun Agro","Agroalimentaire","Ascain","Pyrénées-Atlantiques","Étude","43.3436, -1.6208",13,0,"1 020 000 €","","","45 000 €","Normal","Réseau","","larrun-agro.fr","","","20/07/2026"),
+ E("Elgar Packaging","Industrie","Mont-de-Marsan","Landes","Étude","43.8914, -0.4994",22,0,"2 450 000 €","","","65 000 €","Normal","Site web","","elgar-packaging.fr","","","13/07/2026"),
+ E("Zubia Ingénierie","Services","Biarritz","Pyrénées-Atlantiques","Comité technique","43.4832, -1.5586",19,0,"1 900 000 €","","","50 000 €","Normal","Réseau","","zubia-ingenierie.fr","","","29/07/2026"),
+ E("Ondarra Nautic","Tourisme","Capbreton","Landes","Comité technique","43.6417, -1.4292",16,0,"1 480 000 €","","","40 000 €","Normal","Prescripteur","","ondarra-nautic.fr","","","22/07/2026"),
+ E("Menuiserie Etxeberri","Artisanat","Cambo-les-Bains","Pyrénées-Atlantiques","Comité technique","43.3583, -1.3986",9,0,"760 000 €","","","30 000 €","Normal","Spontané","","menuiserie-etxeberri.fr","","","15/07/2026"),
+ E("Adour Métal Services","Industrie","Tarnos","Landes","Conseil de surveillance","43.5397, -1.4636",24,0,"2 700 000 €","","","40 000 €","Normal","Partenaire","","adour-metal.fr","","","01/08/2026"),
+ E("Conserverie Ibarrune","Agroalimentaire","Saint-Palais","Pyrénées-Atlantiques","Conseil de surveillance","43.3272, -1.0400",15,0,"1 320 000 €","","","30 000 €","Normal","Prescripteur","","conserverie-ibarrune.fr","","","25/07/2026"),
+ E("Sokoburu Distribution","Commerce","Hendaye","Pyrénées-Atlantiques","Arrêté","43.3589, -1.7747",10,0,"820 000 €","","","60 000 €","Normal","Site web","Fonds propres insuffisants, plan de financement non bouclé. Dossier réorienté vers Initiative Pays Basque.","sokoburu-distribution.fr","","","19/06/2026"),
+ E("Oihan Tourisme","Tourisme","Espelette","Pyrénées-Atlantiques","Arrêté","43.3444, -1.4472",8,0,"610 000 €","","","45 000 €","Normal","Réseau","Projet reporté par le dirigeant, reprise du dossier envisagée en 2027.","oihan-tourisme.fr","","","05/06/2026"),
+ E("Kanbo Services","Services","Cambo-les-Bains","Pyrénées-Atlantiques","Arrêté","43.3583, -1.3986",6,0,"430 000 €","","","35 000 €","Normal","Spontané","Avis défavorable du comité technique, modèle économique jugé trop dépendant d'un client unique.","kanbo-services.fr","","","28/05/2026")
+];
+
+/* ---- ORGANISATIONS (nouvelle table) ---- */
+function O(n,a,cp,v,t) { return {nom:n,adresse:a,cp:cp,ville:v,type:t}; }
+var ORGANISATIONS = [
+ O("SCI Etxe Berri","12 rue Port Neuf","64100","Bayonne","Actionnaire personne morale"),
+ O("Holding Ithurria","4 avenue de la Marne","64200","Biarritz","Actionnaire personne morale"),
+ O("Groupe Lauburu","28 boulevard du BAB","64600","Anglet","Actionnaire personne morale"),
+ O("SARL Mendi Participations","7 place des Basques","64100","Bayonne","Actionnaire personne morale"),
+ O("Cabinet Oihana Conseil","15 rue Gambetta","64500","Saint-Jean-de-Luz","Actionnaire personne morale"),
+ O("CCI Bayonne Pays Basque","50 avenue Foch","64100","Bayonne","Partenaire"),
+ O("Initiative Pays Basque","2 allée des Platanes","64100","Bayonne","Partenaire"),
+ O("Réseau Entreprendre Adour","9 rue Sainte-Catherine","64100","Bayonne","Partenaire"),
+ O("Chambre des Métiers 64","1 rue Pitrac","64000","Pau","Partenaire"),
+ O("Région Nouvelle-Aquitaine","14 rue François de Sourdis","33000","Bordeaux","Institutionnel"),
+ O("Communauté Pays Basque","15 avenue Foch","64100","Bayonne","Institutionnel"),
+ O("Département des Landes","23 rue Victor Hugo","40000","Mont-de-Marsan","Institutionnel"),
+ O("Bpifrance Nouvelle-Aquitaine","11 quai de Paludate","33800","Bordeaux","Institutionnel")
+];
+
+/* ---- CONTACTS (CDC §4.3 + 3 champs validés) ---- */
+function C(n,f,t,e,tel,c,ent,org,s,nw,m,env,ag) {
+  return {nom:n,fonction:f,type:t,email:e,tel:tel,commune:c,entreprise:ent,organisation:org,
+          source:s,news:nw,mail:m,envoi:env,agH:ag};
+}
+var CONTACTS = [
+ /* Dirigeants de participations */
+ C("Etcheverry Julien","Président","Dirigeant","j.etcheverry@lynxter.fr","05 59 12 44 08","Bayonne","Lynxter","","Participation",true,"Valide","12/06/2026",""),
+ C("Lasserre Maëva","Directrice administrative et financière","Dirigeant","m.lasserre@lynxter.fr","05 59 12 44 11","Bayonne","Lynxter","","Participation",true,"Valide","12/06/2026",""),
+ C("Oyharçabal Maider","Gérante","Dirigeant","m.oyharcabal@alki.fr","05 59 93 31 20","Larressore","Alki","","Participation",true,"Valide","12/06/2026",""),
+ C("Iturralde Bixente","Directeur général","Dirigeant","b.iturralde@tekniaero.fr","05 59 64 22 70","Tarnos","Tekniaero","","Participation",true,"Valide","12/06/2026",""),
+ C("Dagorret Peio","Gérant","Dirigeant","p.dagorret@pateco.fr","05 59 29 55 12","Hasparren","Pateco","","Participation",true,"Valide","12/06/2026",""),
+ C("Barthélémy Sophie","Présidente","Dirigeant","s.barthelemy@ilargi-composites.fr","05 59 31 88 04","Mouguerre","Ilargi Composites","","Participation",true,"Valide","12/06/2026",""),
+ C("Minvielle Karine","Directrice","Dirigeant","k.minvielle@wikicampers.fr","05 59 54 12 33","Bidart","Wikicampers","","Participation",true,"Valide","12/06/2026",""),
+ /* Contacts de dossiers en cours */
+ C("Haramboure Nicolas","Dirigeant fondateur","Prospect","contact@errobi-mecanique.fr","05 59 29 71 03","Itxassou","Errobi Mécanique","","Formulaire site",true,"Valide","12/06/2026",""),
+ C("Cazenave Pierre","Gérant","Prospect","p.cazenave@tursan-volailles.fr","05 58 44 60 12","Geaune","Tursan Volailles","","Saisie manuelle",false,"À vérifier","",""),
+ C("Sallenave Julie","Cogérante","Prospect","j.sallenave@bidasoa-plasturgie.fr","05 59 20 41 76","Hendaye","Bidasoa Plasturgie","","Formulaire site",true,"Valide","12/06/2026",""),
+ C("Duprat Mathieu","Président","Prospect","m.duprat@anaia-robotique.fr","05 59 03 27 60","Anglet","Anaia Robotique","","Saisie manuelle",true,"Valide","12/06/2026",""),
+ /* Contacts d'anciennes participations */
+ C("Erramouspé Jean","Ancien gérant","Dirigeant","j.erramouspe@aldudes-salaisons.fr","05 59 37 55 21","Les Aldudes","Aldudes Salaisons","","Participation",true,"Valide","12/06/2026",""),
+ C("Lataillade Serge","Ancien président","Dirigeant","s.lataillade@orthe-mecanique.fr","05 58 73 12 09","Peyrehorade","Orthe Mécanique","","Participation",false,"À vérifier","",""),
+ /* Actionnaires personnes physiques */
+ C("Duhalde Bernard","","Actionnaire","b.duhalde@orange.fr","06 81 22 45 37","Anglet","","","Access",true,"Valide","12/06/2026","Inscrit"),
+ C("Iriart Christine","","Actionnaire","c.iriart@wanadoo.fr","06 74 09 18 62","Ustaritz","","","Access",true,"À vérifier","","Non inscrit"),
+ C("Sallaberry Peio","","Actionnaire","","05 59 37 82 14","Saint-Palais","","","Access",false,"Absent","","Non inscrit"),
+ C("Lafitte Sandrine","","Actionnaire","s.lafitte@gmail.com","06 12 88 40 91","Biarritz","","","Access",true,"Valide","12/06/2026","Inscrit"),
+ C("Bidegain Michel","","Actionnaire","m.bidegain@free.fr","06 33 71 05 28","Ustaritz","","","Access",true,"Valide","12/06/2026","Inscrit"),
+ C("Camino Alice","","Actionnaire","a.camino@orange.fr","06 45 19 62 30","Saint-Pée-sur-Nivelle","","","Access",true,"Valide","12/06/2026","Non inscrit"),
+ /* Actionnaires personnes morales (représentants) */
+ C("Larralde Xabi","Gérant","Actionnaire","x.larralde@sci-etxeberri.fr","05 59 25 60 14","Bayonne","","SCI Etxe Berri","Saisie manuelle",true,"Valide","12/06/2026","Inscrit"),
+ C("Ospital Nathalie","Présidente","Actionnaire","n.ospital@holding-ithurria.fr","05 59 24 71 82","Biarritz","","Holding Ithurria","Saisie manuelle",true,"Valide","12/06/2026","Inscrit"),
+ C("Elissalde Ramuntxo","Directeur","Actionnaire","r.elissalde@groupe-lauburu.fr","05 59 52 33 47","Anglet","","Groupe Lauburu","Outlook",true,"Valide","12/06/2026","Non inscrit"),
+ C("Goyheneche Laurent","Gérant","Actionnaire","l.goyheneche@mendi-participations.fr","05 59 46 21 08","Bayonne","","SARL Mendi Participations","Saisie manuelle",false,"Valide","","Non inscrit"),
+ C("Arrambide Oihana","Associée","Actionnaire","o.arrambide@oihana-conseil.fr","05 59 26 84 55","Saint-Jean-de-Luz","","Cabinet Oihana Conseil","Outlook",true,"Valide","12/06/2026","Inscrit"),
+ /* Partenaires */
+ C("Darrieumerlou Anne","Conseillère entreprises","Partenaire","a.darrieumerlou@cci-bayonne.fr","05 59 46 59 46","Bayonne","","CCI Bayonne Pays Basque","Outlook",true,"Valide","12/06/2026",""),
+ C("Pochelu Frédéric","Délégué général","Partenaire","f.pochelu@initiative-pb.fr","05 59 25 30 12","Bayonne","","Initiative Pays Basque","Outlook",true,"Valide","12/06/2026",""),
+ C("Bergara Itziar","Chargée de mission","Partenaire","i.bergara@reseau-entreprendre-adour.fr","05 59 55 18 74","Bayonne","","Réseau Entreprendre Adour","Outlook",true,"Valide","12/06/2026",""),
+ C("Lamothe Céline","Conseillère artisanat","Partenaire","c.lamothe@cma64.fr","05 59 83 30 30","Pau","","Chambre des Métiers 64","Saisie manuelle",false,"À vérifier","",""),
+ /* Institutionnels */
+ C("Larrieu Vincent","Chargé de mission développement économique","Institutionnel","v.larrieu@region-na.fr","05 57 57 80 00","Bordeaux","","Région Nouvelle-Aquitaine","Outlook",false,"Valide","",""),
+ C("Etchegaray Maialen","Responsable économie","Institutionnel","m.etchegaray@communaute-paysbasque.fr","05 59 48 30 85","Bayonne","","Communauté Pays Basque","Outlook",true,"Valide","12/06/2026",""),
+ C("Dubourg Pascal","Directeur du développement","Institutionnel","p.dubourg@landes.fr","05 58 05 40 40","Mont-de-Marsan","","Département des Landes","Saisie manuelle",true,"Valide","12/06/2026",""),
+ C("Nguyen Thi Lan","Chargée d'affaires","Institutionnel","l.nguyen@bpifrance.fr","05 56 48 45 00","Bordeaux","","Bpifrance Nouvelle-Aquitaine","Outlook",false,"Valide","","")
+];
+
+/* ---- NOTES DE SUIVI (CDC §4.4) ---- */
+var NOTES = [
+ {entreprise:"Lynxter",date:"18/07/2026",type:"Point annuel",auteur:"Jérémy",note:"Clôture 2025 remise. Chiffre d'affaires en hausse de 12 %, marge stable. Recrutement de deux techniciens prévu au dernier trimestre. Pas de point de vigilance."},
+ {entreprise:"Lynxter",date:"12/05/2026",type:"Appel",auteur:"Clémence",note:"Échange sur l'ouverture d'un bureau commercial en Espagne. Demande de mise en relation avec un partenaire de Saint-Sébastien."},
+ {entreprise:"Lynxter",date:"03/03/2026",type:"Comité",auteur:"Jérémy",note:"Présentation au comité technique du projet d'extension de la gamme silicone. Avis favorable des experts."},
+ {entreprise:"Lynxter",date:"21/11/2025",type:"Rendez-vous",auteur:"Jérémy",note:"Visite du site de production à Bayonne. Nouvelle ligne d'assemblage opérationnelle depuis septembre."},
+ {entreprise:"Lynxter",date:"15/06/2025",type:"Appel",auteur:"Clémence",note:"Point de mi-année. Carnet de commandes rempli jusqu'à fin d'année."},
+ {entreprise:"Ilargi Composites",date:"22/07/2026",type:"Rendez-vous",auteur:"Clémence",note:"Perte d'un client représentant 30 % du chiffre d'affaires. Plan de redressement demandé pour la rentrée. Passage en vigilance Difficulté."},
+ {entreprise:"Harri Agro",date:"15/07/2026",type:"Appel",auteur:"Jérémy",note:"Trésorerie tendue depuis la hausse du prix des matières. Rendez-vous à programmer avec l'expert-comptable."},
+ {entreprise:"Alki",date:"04/06/2026",type:"Point annuel",auteur:"Jérémy",note:"Année solide, export en progression. Aucun point de vigilance."},
+ {entreprise:"Tekniaero",date:"26/06/2026",type:"Point annuel",auteur:"Clémence",note:"Carnet de commandes aéronautique bien rempli. Projet d'agrandissement de l'atelier à l'étude."},
+ {entreprise:"Uhaina Marine",date:"02/07/2026",type:"Appel",auteur:"Jérémy",note:"Saison touristique en retrait. À suivre au prochain point."}
+];
+
+/* ---- OPÉRATIONS DE FINANCEMENT (CDC §4.2) ---- */
+function P(e,t,m,d,du,r,ec,g,eg,s) {
+  return {entreprise:e,type:t,montant:m,date:d,duree:du,rendement:r,echeance:ec,garantie:g,echeanceGarantie:eg,statut:s};
+}
+var OPERATIONS = [
+ P("Lynxter","Capital","90 000 €","14/03/2022",7,"6,0 %","14/03/2029",false,"","En cours"),
+ P("Lynxter","Obligations convertibles","60 000 €","09/11/2023",5,"5,5 %","09/11/2028",true,"09/11/2027","En cours"),
+ P("Lynxter","Compte courant d'associé","35 000 €","22/05/2025",3,"4,0 %","22/05/2028",false,"","En cours"),
+ P("Alki","Capital","80 000 €","12/09/2018",10,"5,0 %","12/09/2028",false,"","En cours"),
+ P("Alki","Compte courant d'associé","40 000 €","04/02/2022",5,"4,5 %","04/02/2027",false,"","En cours"),
+ P("Tekniaero","Capital","100 000 €","21/01/2021",8,"6,0 %","21/01/2029",false,"","En cours"),
+ P("Tekniaero","Prêt participatif","40 000 €","17/06/2023",5,"4,8 %","17/06/2028",true,"17/06/2027","En cours"),
+ P("Wikicampers","Capital","95 000 €","06/06/2019",8,"5,5 %","06/06/2027",false,"","En cours"),
+ P("Pateco","Capital","60 000 €","07/07/2017",10,"5,0 %","07/07/2027",false,"","En cours"),
+ P("Pateco","Titres participatifs","28 000 €","15/03/2021",6,"4,2 %","15/03/2027",false,"","En cours"),
+ P("Don Quichosse","Capital","70 000 €","18/10/2020",7,"5,5 %","18/10/2027",false,"","En cours"),
+ P("Ilargi Composites","Capital","95 000 €","15/05/2019",8,"6,0 %","15/05/2027",true,"15/05/2026","En cours"),
+ P("Harri Agro","Compte courant d'associé","72 000 €","09/02/2020",6,"4,5 %","09/02/2026",false,"","En cours"),
+ P("Uhaina Marine","Obligations convertibles","85 000 €","11/03/2020",7,"5,2 %","11/03/2027",false,"","En cours"),
+ P("Bidart Confection","Prêt participatif","48 000 €","24/06/2021",6,"4,6 %","24/06/2027",false,"","En cours"),
+ P("Aldudes Salaisons","Capital","110 000 €","04/05/2014",10,"5,0 %","04/05/2024",false,"","Cédée"),
+ P("Orthe Mécanique","Capital","95 000 €","22/09/2013",10,"5,5 %","22/09/2023",false,"","Remboursée")
+];
+
+/* ---- ASSEMBLÉES GÉNÉRALES (CDC §4.5) ---- */
+function G(e,d,l,r,s) { return {entreprise:e,date:d,lieu:l,representant:r,statut:s}; }
+var AGS = [
+ G("Uhaina Marine","04/09/2026","Ciboure, siège social","Jérémy","Confirmée"),
+ G("Wikicampers","11/09/2026","Bidart, siège social","Clémence","Confirmée"),
+ G("Ilargi Composites","16/09/2026","Mouguerre, siège social","Clémence","Confirmée"),
+ G("Alki","18/09/2026","Larressore, siège social","Clémence","Confirmée"),
+ G("Harri Agro","23/09/2026","Saint-Palais, siège social","Jérémy","Confirmée"),
+ G("Lynxter","24/09/2026","Bayonne, siège social","Jérémy","Confirmée"),
+ G("Pateco","25/09/2026","Hasparren, siège social","Jérémy","À planifier"),
+ G("Tekniaero","02/10/2026","Tarnos, siège social","Jérémy","À planifier"),
+ G("Sarea Numérique","08/10/2026","Anglet, siège social","Clémence","À planifier"),
+ G("Don Quichosse","09/10/2026","Saint-Sever, siège social","Non couverte","À planifier"),
+ G("Errota Distribution","15/10/2026","Urrugne, siège social","Non couverte","À planifier"),
+ G("Landes Métal Process","22/10/2026","Mont-de-Marsan, siège social","Jérémy","À planifier"),
+ G("Bidart Confection","29/05/2026","Bidart, siège social","Non couverte","Réalisée"),
+ G("Ma Petite Sponso","05/06/2026","Biarritz, siège social","Jérémy","Réalisée"),
+ G("La Boîte Concept","12/06/2026","Anglet, siège social","Clémence","Réalisée")
+];
+
+/* ---- PUBLICATIONS ET ÉVÈNEMENTS (CDC §4.7 + apports §4.6) ---- */
+var PUBLICATIONS = [
+ {titre:"Portrait : Alki, 45 ans de savoir-faire",type:"Post LinkedIn",contenu:"Depuis Larressore, Alki fabrique des meubles contemporains dessinés par des designers basques. Retour sur 45 ans d'un savoir-faire qui n'a jamais quitté le territoire.",illustration:"alki-atelier.jpg",date:"12/05/2026",statutPost:"Publié",compte:"Herrikoa",entreprise:"Alki",commentaires:"Série à décliner sur d'autres participations."},
+ {titre:"Bienvenue à Lynxter dans notre portefeuille",type:"Post LinkedIn",contenu:"Herrikoa entre au capital de Lynxter, fabricant bayonnais d'imprimantes 3D silicone. 21 emplois soutenus sur le territoire.",illustration:"lynxter-imprimante.jpg",date:"05/08/2026",statutPost:"Programmé",compte:"Herrikoa",entreprise:"Lynxter",commentaires:"Visuel validé par le dirigeant."},
+ {titre:"Focus : l'emploi soutenu en Pays Basque",type:"Post LinkedIn",contenu:"1 240 emplois soutenus par les participations Herrikoa. Le détail secteur par secteur.",illustration:"",date:"",statutPost:"À rédiger",compte:"Clémence",entreprise:"",commentaires:"Reprendre le chiffre des emplois soutenus."},
+ {titre:"Série « Ils ont grandi avec Herrikoa »",type:"Post LinkedIn",contenu:"Format mensuel racontant le parcours d'une participation, de l'entrée au capital jusqu'à aujourd'hui.",illustration:"",date:"",statutPost:"Idée",compte:"Clémence",entreprise:"",commentaires:"Idée de série éditoriale mensuelle"},
+ {titre:"Interview dirigeant Tekniaero",type:"Post LinkedIn",contenu:"Entretien filmé avec le dirigeant sur la sous-traitance aéronautique et la diversification.",illustration:"",date:"",statutPost:"Non applicable",compte:"Non applicable",entreprise:"Tekniaero",commentaires:"En attente de validation du dirigeant"},
+ {titre:"Résultats 2025 : 6 nouveaux investissements en Pays Basque",type:"Post LinkedIn",contenu:"Six entreprises rejoignent le portefeuille cette année, pour un montant total engagé de 3,4 M€.",illustration:"bilan-2025.jpg",date:"20/08/2026",statutPost:"Programmé",compte:"Herrikoa",entreprise:"",commentaires:"Reprendre les chiffres du rapport annuel."},
+ {titre:"Retour sur la visite chez Wikicampers",type:"Post LinkedIn",contenu:"Une matinée à Bidart avec l'équipe Wikicampers pour comprendre la location de camping-cars entre particuliers.",illustration:"visite-wikicampers.jpg",date:"27/08/2026",statutPost:"Rédigé et à programmer",compte:"Clémence",entreprise:"Wikicampers",commentaires:"Photos à récupérer auprès de Jérémy."},
+ {titre:"Rencontre experts : transmission d'entreprise",type:"Événement",contenu:"Table ronde avec le comité technique sur la transmission d'entreprise en Pays Basque. Ouvert aux actionnaires et aux dirigeants du portefeuille.",illustration:"rencontre-experts.jpg",date:"20/09/2026",statutPost:"Programmé",compte:"Herrikoa",entreprise:"",commentaires:"Inscriptions ouvertes début septembre.",invites:240,inscrits:87,relances:35,statutEv:"Invitations envoyées"},
+ {titre:"Visite d'entreprise : Lynxter",type:"Événement",contenu:"Visite du site de production bayonnais, présentation de la gamme silicone et échange avec le dirigeant.",illustration:"",date:"14/10/2026",statutPost:"À rédiger",compte:"Herrikoa",entreprise:"Lynxter",commentaires:"Jauge limitée à 40 personnes.",invites:120,inscrits:41,relances:22,statutEv:"En préparation"},
+ {titre:"Rencontre experts : financement de la croissance",type:"Événement",contenu:"Retour sur les instruments de financement mobilisés par Herrikoa auprès des PME du territoire.",illustration:"rencontre-financement.jpg",date:"12/03/2026",statutPost:"Publié",compte:"Herrikoa",entreprise:"",commentaires:"Édition close, bon taux de participation.",invites:210,inscrits:96,relances:0,statutEv:"Clôturé"},
+ {titre:"Visite d'entreprise : Tekniaero",type:"Événement",contenu:"Découverte de l'atelier de sous-traitance aéronautique de Tarnos avec le comité technique.",illustration:"",date:"19/08/2026",statutPost:"Rédigé et à programmer",compte:"Herrikoa",entreprise:"Tekniaero",commentaires:"Date à confirmer avec le dirigeant.",invites:90,inscrits:28,relances:14,statutEv:"En préparation"}
+];
+
+/* Lookup : rattachement du contact d'après le statut de l'entreprise liée */
+var STATUT_RATTACHEMENT = {
+  "Contact":"Prospect","Rencontre":"Prospect","Étude":"Prospect",
+  "Comité technique":"Prospect","Conseil de surveillance":"Prospect",
+  "Portefeuille":"Membre","Sorti":"Ancien membre","Arrêté":"Ancien membre"
+};
+function statutEntrepriseDe(nom) {
+  for (var i = 0; i < ENTREPRISES.length; i++) if (ENTREPRISES[i].nom === nom) return ENTREPRISES[i].statut;
+  return "";
+}
+function rattachementDe(c) {
+  var s = statutEntrepriseDe(c.entreprise);
+  return s ? STATUT_RATTACHEMENT[s] : "";
+}
+CONTACTS.forEach(function (c) { c.statutEntreprise = statutEntrepriseDe(c.entreprise); c.rattachement = rattachementDe(c); });
+
+/* ============================================================
+   SCHÉMA DES FICHES (pages Entrée)
+   ============================================================ */
+var F_ENTREPRISE = [
+ {g:"Identité",      l:"Nom",                           k:"nom",       t:"text"},
+ {g:"Identité",      l:"Statut",                        k:"statut",    t:"select", o:OPT.statutEnt, b:B.statutEnt},
+ {g:"Identité",      l:"Secteur",                       k:"secteur",   t:"select", o:OPT.secteur,   b:B.secteur},
+ {g:"Identité",      l:"Commune",                       k:"commune",   t:"text"},
+ {g:"Identité",      l:"Département",                   k:"dept",      t:"select", o:OPT.dept,      b:B.dept},
+ {g:"Identité",      l:"Coordonnées",                   k:"coord",     t:"text"},
+ {g:"Identité",      l:"Site web",                      k:"site",      t:"url"},
+ {g:"Identité",      l:"Dossier",                       k:"dossier",   t:"url"},
+ {g:"Activité",      l:"Effectif",                      k:"effectif",  t:"number"},
+ {g:"Activité",      l:"Emplois créés / maintenus",     k:"emplois",   t:"number"},
+ {g:"Activité",      l:"Chiffre d'affaires",            k:"ca",        t:"text"},
+ {g:"Participation", l:"Date d'entrée en portefeuille", k:"entree",    t:"date"},
+ {g:"Participation", l:"Durée de détention",            k:"duree",     t:"formula"},
+ {g:"Participation", l:"Montant total engagé",          k:"montant",   t:"rollup"},
+ {g:"Participation", l:"Niveau de vigilance",           k:"vigilance", t:"select", o:OPT.vigilance, b:B.vigilance},
+ {g:"Participation", l:"Origine du contact",            k:"origine",   t:"select", o:OPT.origine,   b:B.origine},
+ {g:"Participation", l:"Motif d'arrêt",                 k:"motif",     t:"longtext"},
+ {g:"_lien", l:"Opérations", k:"_ops", t:"link"}, {g:"_lien", l:"Contacts", k:"_contacts", t:"link"},
+ {g:"_lien", l:"Suivi", k:"_notes", t:"link"},    {g:"_lien", l:"AG", k:"_ags", t:"link"}
+];
+
+var F_OPERATION = [
+ {g:"Opération", l:"Entreprise",           k:"entreprise",       t:"linkone"},
+ {g:"Opération", l:"Type",                 k:"type",             t:"select", o:OPT.typeOp,   b:B.typeOp},
+ {g:"Opération", l:"Montant",              k:"montant",          t:"text"},
+ {g:"Opération", l:"Date d'opération",     k:"date",             t:"date"},
+ {g:"Opération", l:"Durée",                k:"duree",            t:"number", suffix:" ans"},
+ {g:"Opération", l:"Rendement attendu",    k:"rendement",        t:"text"},
+ {g:"Opération", l:"Échéance",             k:"echeance",         t:"date"},
+ {g:"Garantie",  l:"Garantie",             k:"garantie",         t:"checkbox"},
+ {g:"Garantie",  l:"Échéance de garantie", k:"echeanceGarantie", t:"date"},
+ {g:"Suivi",     l:"Statut",               k:"statut",           t:"select", o:OPT.statutOp, b:B.statutOp}
+];
+
+/* Contact : 11 champs du CDC §4.3 + 3 ajouts validés */
+var F_CONTACT = [
+ {g:"Identité",     l:"Nom / Prénom",       k:"nom",        t:"text"},
+ {g:"Identité",     l:"Fonction",           k:"fonction",   t:"text"},
+ {g:"Identité",     l:"Type",               k:"type",       t:"select", o:OPT.typeCt, b:B.typeCt},
+ {g:"Identité",     l:"Commune",            k:"commune",    t:"text"},
+ {g:"Coordonnées",  l:"E-mail",             k:"email",      t:"email"},
+ {g:"Coordonnées",  l:"Téléphone",          k:"tel",        t:"phone"},
+ {g:"Coordonnées",  l:"Statut e-mail",      k:"mail",       t:"select", o:OPT.mail,   b:B.mail},
+ {g:"Rattachement", l:"Entreprise",         k:"entreprise", t:"linkone"},
+ {g:"Rattachement", l:"Statut entreprise",  k:"statutEntreprise", t:"lookup"},
+ {g:"Rattachement", l:"Organisation",       k:"organisation", t:"linkone"},
+ {g:"Rattachement", l:"Source",             k:"source",     t:"select", o:OPT.source, b:B.source},
+ {g:"Diffusion",    l:"Abonné newsletter",  k:"news",       t:"checkbox"},
+ {g:"Diffusion",    l:"Dernier envoi",      k:"envoi",      t:"date"},
+ {g:"Diffusion",    l:"AG Herrikoa",        k:"agH",        t:"select", o:OPT.agH,    b:B.agH}
+];
+
+var F_ORGANISATION = [
+ {g:"Organisation", l:"Nom",         k:"nom",     t:"text"},
+ {g:"Organisation", l:"Type",        k:"type",    t:"select", o:OPT.typeOrg, b:B.typeOrg},
+ {g:"Adresse",      l:"Adresse",     k:"adresse", t:"text"},
+ {g:"Adresse",      l:"Code postal", k:"cp",      t:"text"},
+ {g:"Adresse",      l:"Ville",       k:"ville",   t:"text"},
+ {g:"_lien", l:"Contacts", k:"_contactsOrg", t:"link"}
+];
+
+var F_NOTE = [
+ {g:"Note", l:"Entreprise", k:"entreprise", t:"linkone"},
+ {g:"Note", l:"Date",       k:"date",       t:"date"},
+ {g:"Note", l:"Type",       k:"type",       t:"select", o:OPT.typeNote, b:B.typeNote},
+ {g:"Note", l:"Auteur",     k:"auteur",     t:"select", o:OPT.auteur,   b:B.auteur},
+ {g:"Note", l:"Note",       k:"note",       t:"longtext"}
+];
+
+var F_AG = [
+ {g:"Assemblée générale", l:"Entreprise",            k:"entreprise",   t:"linkone"},
+ {g:"Assemblée générale", l:"Date",                  k:"date",         t:"date"},
+ {g:"Assemblée générale", l:"Lieu",                  k:"lieu",         t:"text"},
+ {g:"Représentation",     l:"Représentant Herrikoa", k:"representant", t:"select", o:OPT.repAG,    b:B.repAG},
+ {g:"Représentation",     l:"Statut",                k:"statut",       t:"select", o:OPT.statutAG, b:B.statutAG}
+];
+
+var F_PUBLICATION = [
+ {g:"Publication",   l:"Titre",           k:"titre",        t:"text"},
+ {g:"Publication",   l:"Type",            k:"type",         t:"select", o:OPT.typePub,    b:B.typePub},
+ {g:"Publication",   l:"Contenu",         k:"contenu",      t:"longtext"},
+ {g:"Publication",   l:"Illustration",    k:"illustration", t:"attachment"},
+ {g:"Programmation", l:"Date",            k:"date",         t:"date"},
+ {g:"Programmation", l:"Statut du post",  k:"statutPost",   t:"select", o:OPT.statutPost, b:B.statutPost},
+ {g:"Programmation", l:"Compte",          k:"compte",       t:"select", o:OPT.compte,     b:B.compte},
+ {g:"Rattachement",  l:"Entreprise liée", k:"entreprise",   t:"linkone"},
+ {g:"Rattachement",  l:"Commentaires",    k:"commentaires", t:"longtext"}
+];
+
+var F_EVENEMENT = [
+ {g:"Événement",     l:"Titre",            k:"titre",        t:"text"},
+ {g:"Événement",     l:"Type",             k:"type",         t:"select", o:OPT.typePub,    b:B.typePub},
+ {g:"Événement",     l:"Contenu",          k:"contenu",      t:"longtext"},
+ {g:"Événement",     l:"Illustration",     k:"illustration", t:"attachment"},
+ {g:"Événement",     l:"Date",             k:"date",         t:"date"},
+ {g:"Participation", l:"Invités",          k:"invites",      t:"number"},
+ {g:"Participation", l:"Inscrits",         k:"inscrits",     t:"number"},
+ {g:"Participation", l:"Relances à faire", k:"relances",     t:"number"},
+ {g:"Participation", l:"Statut",           k:"statutEv",     t:"select", o:OPT.statutEv,   b:B.statutEv},
+ {g:"Communication", l:"Statut du post",   k:"statutPost",   t:"select", o:OPT.statutPost, b:B.statutPost},
+ {g:"Communication", l:"Compte",           k:"compte",       t:"select", o:OPT.compte,     b:B.compte},
+ {g:"Rattachement",  l:"Entreprise liée",  k:"entreprise",   t:"linkone"},
+ {g:"Rattachement",  l:"Commentaires",     k:"commentaires", t:"longtext"}
+];
+
+/* ============================================================
+   RENDU D'UNE FICHE
+   ============================================================ */
+var _uid = 0;
+function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function badgeOf(map, v) { return 'badge-' + ((map && map[v]) || 'gray'); }
+
+function renderField(f, rec) {
+    var v = rec[f.k];
+    var id = 'fld' + (++_uid);
+    if (f.t === 'select') {
+        var opts = f.o.map(function (o) {
+            return '<div class="field-select-option" data-badge-class="' + badgeOf(f.b, o) + '" onclick="selectOption(this,\'' + id + '\')">' + esc(o) + '</div>';
+        }).join('');
+        return '<div class="field-select"><div class="field-select-value" onclick="toggleSelect(this)">' +
+               (v ? '<span class="badge ' + badgeOf(f.b, v) + '" id="val-' + id + '">' + esc(v) + '</span>'
+                  : '<span class="badge badge-gray field-empty" id="val-' + id + '">-</span>') +
+               '<span class="field-select-arrow">▾</span></div>' +
+               '<div class="field-select-dropdown">' + opts + '</div></div>';
+    }
+    if (f.t === 'checkbox') return '<label class="field-checkbox-label"><input type="checkbox" class="field-checkbox-input"' + (v ? ' checked' : '') + '></label>';
+    if (f.t === 'longtext') return '<div class="field-textarea" onclick="editTextarea(this)"><div class="field-textarea-display">' + (v ? esc(v) : '-') + '</div><textarea class="field-textarea-input" style="display:none" onblur="saveTextarea(this)" rows="4"></textarea></div>';
+    if (f.t === 'formula') return '<span class="field-readonly"><span class="field-readonly-icon">ƒ</span>' + (v ? esc(v) : '-') + '</span>';
+    if (f.t === 'rollup')  return '<span class="field-readonly"><span class="field-readonly-icon">Σ</span>' + (v ? esc(v) : '-') + '</span>';
+    if (f.t === 'lookup')  return '<span class="field-readonly"><span class="field-readonly-icon">↗</span>' + (v ? esc(v) : '-') + '</span>';
+    if (f.t === 'linkone') return v ? '<span class="detail-linked-record" onclick="alert(\'Fonctionnalité disponible dans Airtable\')">' + esc(v) + '</span>' : '-';
+    if (f.t === 'attachment') return v ? '<span class="field-attachment">🖼️ ' + esc(v) + '</span>' : '<button class="field-add-link" onclick="alert(\'Fonctionnalité disponible dans Airtable\')">＋ Ajouter un fichier</button>';
+    if (f.t === 'url' || f.t === 'email') return v ? '<span class="col-email">' + esc(v) + '</span>' : '-';
+    var cls = (f.t === 'phone') ? ' col-phone' : '';
+    var disp = (v === '' || v == null) ? '-' : esc(v) + (f.suffix || '');
+    return '<div class="field-text" onclick="editText(this)"><span class="field-text-display' + cls + '">' + disp + '</span>' +
+           '<input class="field-text-input" type="text" value="' + esc(v) + '" style="display:none" onblur="saveText(this)" onkeydown="if(event.key===\'Enter\') this.blur()"></div>';
+}
+
+function lcard(t, lines, badge) {
+    return '<div class="linked-card" onclick="alert(\'Fonctionnalité disponible dans Airtable\')">' +
+           '<div class="linked-card-title">' + esc(t) + '</div>' +
+           lines.map(function (l) { return '<div class="linked-card-field">' + esc(l) + '</div>'; }).join('') +
+           (badge ? '<div class="linked-card-field">' + badge + '</div>' : '') + '</div>';
+}
+function lsection(label, items, fn) {
+    return '<div class="detail-section"><h4 class="detail-section-title">' + label + ' (' + items.length + ')</h4>' +
+           (items.length ? items.map(fn).join('') : '<div class="detail-section-empty">Aucun enregistrement lié.</div>') +
+           '<button class="field-add-link" onclick="alert(\'Fonctionnalité disponible dans Airtable\')">＋ Ajouter</button></div>';
+}
+
+function blocsEntreprise(nom) {
+    var f = function (a) { return a.filter(function (o) { return o.entreprise === nom; }); };
+    return lsection('Opérations de financement', f(OPERATIONS), function (o) {
+             return lcard(o.type + ' - ' + o.montant,
+               ["Date d'opération : " + o.date + ' · Durée : ' + o.duree + ' ans · Rendement attendu : ' + o.rendement,
+                'Échéance : ' + o.echeance + ' · Garantie : ' + (o.garantie ? 'oui (échéance ' + o.echeanceGarantie + ')' : 'non')],
+               '<span class="badge ' + badgeOf(B.statutOp, o.statut) + '">' + o.statut + '</span>'); }) +
+           lsection('Notes de suivi', f(NOTES), function (o) { return lcard(o.date + ' · ' + o.type + ' · ' + o.auteur, [o.note], ''); }) +
+           lsection('Contacts rattachés', f(CONTACTS), function (o) { return lcard(o.nom, [o.fonction || '-', o.email || '-'], ''); }) +
+           lsection('Assemblées générales', f(AGS), function (o) {
+             return lcard(o.date, ['Lieu : ' + o.lieu, 'Représentant Herrikoa : ' + o.representant],
+               '<span class="badge ' + badgeOf(B.statutAG, o.statut) + '">' + o.statut + '</span>'); });
+}
+function blocsOrganisation(nom) {
+    return lsection('Contacts rattachés', CONTACTS.filter(function (c) { return c.organisation === nom; }),
+        function (o) { return lcard(o.nom, [o.fonction || '-', o.email || '-'], ''); });
+}
+
+function openFiche(schema, rec, titre, blocs) {
+    document.getElementById('fiche-title').textContent = titre;
+    var groups = {}, order = [];
+    schema.forEach(function (f) {
+        if (f.t === 'link') return;
+        if (!groups[f.g]) { groups[f.g] = []; order.push(f.g); }
+        groups[f.g].push(f);
+    });
+    var h = order.map(function (g) {
+        return '<div class="detail-section"><h4 class="detail-section-title">' + esc(g) + '</h4>' +
+               groups[g].map(function (f) {
+                   return '<div class="detail-row"><div class="detail-row-label">' + esc(f.l) + '</div>' +
+                          '<div class="detail-row-value">' + renderField(f, rec) + '</div></div>';
+               }).join('') + '</div>';
+    }).join('');
+    if (blocs) h += blocs;
+    document.getElementById('fiche-body').innerHTML = h;
+    document.getElementById('fiche-modal').classList.add('open');
+}
+function closeFiche() { document.getElementById('fiche-modal').classList.remove('open'); }
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeFiche(); });
+
+function openEntreprise(i)   { var e = ENTREPRISES[i]; openFiche(F_ENTREPRISE, e, e.nom, blocsEntreprise(e.nom)); }
+function openContact(i)      { var c = CONTACTS[i];    openFiche(F_CONTACT, c, c.nom); }
+function openOrganisation(i) { var o = ORGANISATIONS[i]; openFiche(F_ORGANISATION, o, o.nom, blocsOrganisation(o.nom)); }
+function openAG(i)           { var a = AGS[i];         openFiche(F_AG, a, 'AG ' + a.entreprise + ' - ' + a.date); }
+function openOperation(i)    { var o = OPERATIONS[i];  openFiche(F_OPERATION, o, o.entreprise + ' - ' + o.type); }
+function openPublication(i)  { var p = PUBLICATIONS[i];openFiche(F_PUBLICATION, p, p.titre); }
+function openEvenement(i)    { var p = PUBLICATIONS[i];openFiche(F_EVENEMENT, p, p.titre); }
+
+/* ============================================================
+   RENDU DES VUES
+   ============================================================ */
+function bdg(map, v) { return v ? '<span class="badge ' + badgeOf(map, v) + '">' + esc(v) + '</span>' : '-'; }
+function lnk(v) { return v ? '<span class="detail-linked-record">' + esc(v) + '</span>' : '-'; }
+function txt(v) { return (v === '' || v == null) ? '-' : esc(v); }
+
+function buildTable(id, cols, rows, onclick) {
+    var head = '<tr><th class="col-checkbox"><input type="checkbox" disabled></th>' +
+        cols.map(function (c) { return '<th' + (c.cls ? ' class="' + c.cls + '"' : '') + '><span class="field-icon">' + c.i + '</span>' + esc(c.l) + '</th>'; }).join('') + '</tr>';
+    var body = rows.map(function (r) {
+        return '<tr class="list-row"' + (r._tab ? ' data-tab="' + esc(r._tab) + '"' : '') +
+               (onclick ? ' onclick="' + onclick + '(' + r._i + ')"' : '') + '>' +
+               '<td class="col-checkbox"><input type="checkbox" disabled onclick="event.stopPropagation()"></td>' +
+               cols.map(function (c) { return '<td' + (c.cls ? ' class="' + c.cls + '"' : '') + '>' + c.v(r) + '</td>'; }).join('') + '</tr>';
+    }).join('');
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = '<thead>' + head + '</thead><tbody>' + body + '</tbody>';
+}
+function pick(arr, keep, tab) {
+    var out = [];
+    arr.forEach(function (o, i) {
+        if (!keep(o)) return;
+        var r = Object.create(o); r._i = i; r._tab = tab ? tab(o) : ''; out.push(r);
+    });
+    return out;
+}
+function setCnt(id, n, mot) { var e = document.getElementById(id); if (e) e.textContent = n + ' ' + mot; }
+
+var COL = {
+    nomPrim:  function (k) { return {i:'A', l:'Nom', v:function(r){return '<span class="col-primary">'+esc(r[k])+'</span>';}}; },
+    contact:  [
+        {i:'A',  l:'Nom / Prénom', v:function(r){return '<span class="col-primary">'+esc(r.nom)+'</span>';}},
+        {i:'A',  l:'Fonction',     v:function(r){return txt(r.fonction);}},
+        {i:'▾',  l:'Type',         v:function(r){return bdg(B.typeCt, r.type);}},
+        {i:'📧', l:'E-mail',       v:function(r){return r.email ? '<span class="col-email">'+esc(r.email)+'</span>' : '-';}},
+        {i:'📱', l:'Téléphone', cls:'col-phone', v:function(r){return txt(r.tel);}},
+        {i:'A',  l:'Commune',      v:function(r){return txt(r.commune);}}
+    ]
+};
+
+/* ---- PILOTAGE : listes d'entrées du tableau de bord ---- */
+function viewSurveiller() {
+    var h = '';
+    ENTREPRISES.forEach(function (e, i) {
+        if (e.statut !== 'Portefeuille' || e.vigilance === 'Normal') return;
+        var col = (e.vigilance === 'Difficulté') ? '#ef4444' : '#f59e0b';
+        h += '<div class="entry-row" onclick="openEntreprise(' + i + ')">' +
+             '<div class="entry-color" style="background:' + col + ';"></div>' +
+             '<div class="entry-main"><div class="entry-title">' + esc(e.nom) + '</div>' +
+             '<div class="entry-sub">Dernier point de suivi : ' + esc(e.dernierSuivi) + '</div></div>' +
+             '<div class="entry-side">' + esc(e.montant) + '</div></div>';
+    });
+    var el = document.getElementById('entry-surveiller'); if (el) el.innerHTML = h;
+}
+function viewPipeChart() {
+    var etapes = ['Contact','Rencontre','Étude','Comité technique','Conseil de surveillance'];
+    var counts = etapes.map(function (s) { return ENTREPRISES.filter(function (e) { return e.statut === s; }).length; });
+    var max = Math.max.apply(null, counts) || 1;
+    var h = etapes.map(function (s, n) {
+        return '<div class="bar-item"><div class="bar-label">' + esc(s) + '</div>' +
+               '<div class="bar-track"><div class="bar-fill" style="width:' + (counts[n]/max*100) + '%;background:#166ee1;"></div></div>' +
+               '<div class="bar-value">' + counts[n] + '</div></div>';
+    }).join('');
+    var el = document.getElementById('chart-pipe'); if (el) el.innerHTML = h;
+}
+function viewContactsChart() {
+    var types = OPT.typeCt;
+    var counts = types.map(function (t) { return CONTACTS.filter(function (c) { return c.type === t; }).length; });
+    var max = Math.max.apply(null, counts) || 1;
+    var h = types.map(function (t, n) {
+        return '<div class="bar-item"><div class="bar-label">' + esc(t) + '</div>' +
+               '<div class="bar-track"><div class="bar-fill" style="width:' + (counts[n]/max*100) + '%;background:#8b5cf6;"></div></div>' +
+               '<div class="bar-value">' + counts[n] + '</div></div>';
+    }).join('');
+    var el = document.getElementById('chart-contacts'); if (el) el.innerHTML = h;
+}
+
+/* ---- PARTICIPATIONS ---- */
+function viewKanban() {
+    var PIPE = ['Contact','Rencontre','Étude','Comité technique','Conseil de surveillance','Arrêté'];
+    var h = PIPE.map(function (st) {
+        var cards = [], somme = 0;
+        ENTREPRISES.forEach(function (e, i) {
+            if (e.statut !== st) return;
+            somme += parseInt(String(e.montant).replace(/\D/g, ''), 10) || 0;
+            cards.push('<div class="kanban-card" onclick="openEntreprise(' + i + ')">' +
+                '<div class="kanban-card-title">' + esc(e.nom) + '</div>' +
+                kr('Commune', e.commune) + kr('Sollicité', e.montant) + kr('Origine', e.origine) + kr('Dernier échange', e.echange) +
+                (e.motif ? '<div class="kanban-card-motif"><strong>Motif d\'arrêt :</strong> ' + esc(e.motif) + '</div>'
+                         : '<div class="kanban-card-badges"><span class="badge ' + badgeOf(B.secteur, e.secteur) + '">' + esc(e.secteur) + '</span></div>') + '</div>');
+        });
+        return '<div class="kanban-column"><div class="kanban-column-header">' +
+               '<span class="badge ' + badgeOf(B.statutEnt, st) + '">' + esc(st) + '</span>' +
+               '<span class="kanban-count">' + cards.length + '</span>' +
+               (st === 'Arrêté' ? '' : '<span class="kanban-sum">' + somme.toLocaleString('fr-FR') + ' €</span>') +
+               '</div><div class="kanban-cards">' + cards.join('') + '</div></div>';
+    }).join('') + '<div class="kanban-column kanban-column-add"><span>＋</span></div>';
+    var el = document.getElementById('kanban-board'); if (el) el.innerHTML = h;
+    function kr(l, v) { return '<div class="kanban-card-field"><span class="kanban-card-label">' + l + '</span><span class="kanban-card-value">' + esc(v || '-') + '</span></div>'; }
+}
+
+function viewEntreprises() {
+    var rows = pick(ENTREPRISES, function (e) { return e.statut === 'Portefeuille'; }, function (e) { return e.vigilance; });
+    buildTable('tbl-entreprises', [
+        COL.nomPrim('nom'),
+        {i:'▾',  l:'Statut',      v:function(r){return bdg(B.statutEnt, r.statut);}},
+        {i:'▾',  l:'Secteur',     v:function(r){return bdg(B.secteur, r.secteur);}},
+        {i:'A',  l:'Commune',     v:function(r){return txt(r.commune);}},
+        {i:'▾',  l:'Département', v:function(r){return txt(r.dept);}},
+        {i:'Σ',  l:'Montant total engagé', cls:'col-currency', v:function(r){return txt(r.montant);}},
+        {i:'📅', l:"Date d'entrée", v:function(r){return txt(r.entree);}},
+        {i:'ƒ',  l:'Durée de détention', cls:'col-number', v:function(r){return txt(r.duree);}},
+        {i:'▾',  l:'Niveau de vigilance', v:function(r){return bdg(B.vigilance, r.vigilance);}},
+        {i:'#',  l:'Effectif', cls:'col-number', v:function(r){return txt(r.effectif);}},
+        {i:'#',  l:'Emplois créés / maintenus', cls:'col-number', v:function(r){return txt(r.emplois);}}
+    ], rows, 'openEntreprise');
+    setCnt('cnt-entreprises', rows.length, 'entreprises affichées sur 68');
+}
+
+/* Contacts des participations : onglets sur le rattachement (lookup) */
+function viewContactsPart() {
+    var rows = pick(CONTACTS, function (c) { return !!c.rattachement; }, function (c) { return c.rattachement; });
+    buildTable('tbl-contacts-part', COL.contact.concat([
+        {i:'🔗', l:'Entreprise',        v:function(r){return lnk(r.entreprise);}},
+        {i:'↗',  l:'Rattachement',      v:function(r){return bdg(B.rattach, r.rattachement);}},
+        {i:'▾',  l:'Source',            v:function(r){return bdg(B.source, r.source);}},
+        {i:'☑',  l:'Abonné newsletter', v:function(r){return r.news ? 'Oui' : 'Non';}},
+        {i:'▾',  l:'Statut e-mail',     v:function(r){return bdg(B.mail, r.mail);}}
+    ]), rows, 'openContact');
+    setCnt('cnt-contacts-part', rows.length, 'contacts');
+}
+
+function viewOperations() {
+    var rows = pick(OPERATIONS, function () { return true; }, function (o) { return o.type; });
+    buildTable('tbl-ops', [
+        {i:'🔗', l:'Entreprise', v:function(r){return '<span class="col-primary">'+esc(r.entreprise)+'</span>';}},
+        {i:'▾',  l:'Type',       v:function(r){return bdg(B.typeOp, r.type);}},
+        {i:'€',  l:'Montant', cls:'col-currency', v:function(r){return txt(r.montant);}},
+        {i:'📅', l:"Date d'opération", v:function(r){return txt(r.date);}},
+        {i:'#',  l:'Durée', cls:'col-number', v:function(r){return r.duree + ' ans';}},
+        {i:'%',  l:'Rendement attendu', cls:'col-number', v:function(r){return txt(r.rendement);}},
+        {i:'📅', l:'Échéance',   v:function(r){return txt(r.echeance);}},
+        {i:'☑',  l:'Garantie',   v:function(r){return r.garantie ? 'Oui' : 'Non';}},
+        {i:'📅', l:'Échéance de garantie', v:function(r){return txt(r.echeanceGarantie);}},
+        {i:'▾',  l:'Statut',     v:function(r){return bdg(B.statutOp, r.statut);}}
+    ], rows, 'openOperation');
+    setCnt('cnt-ops', rows.length, 'opérations');
+}
+
+function viewAGs() {
+    var rows = pick(AGS, function () { return true; }, function (a) { return a.statut; });
+    buildTable('tbl-ags', [
+        {i:'🔗', l:'Entreprise', v:function(r){return '<span class="col-primary">'+esc(r.entreprise)+'</span>';}},
+        {i:'📅', l:'Date',       v:function(r){return txt(r.date);}},
+        {i:'A',  l:'Lieu',       v:function(r){return txt(r.lieu);}},
+        {i:'▾',  l:'Représentant Herrikoa', v:function(r){return bdg(B.repAG, r.representant);}},
+        {i:'▾',  l:'Statut',     v:function(r){return bdg(B.statutAG, r.statut);}}
+    ], rows, 'openAG');
+    setCnt('cnt-ags', rows.length, 'assemblées générales');
+}
+
+/* Calendrier des AG : septembre 2026 (01/09/2026 = mardi) */
+function viewCalendrierAG() {
+    var PREMIER = 1, JOURS = 30, AVANT = [31];
+    var evts = {};
+    AGS.forEach(function (a, i) {
+        var m = a.date.split('/');
+        if (m[1] !== '09' || m[2] !== '2026') return;
+        (evts[parseInt(m[0],10)] = evts[parseInt(m[0],10)] || []).push({ a: a, i: i });
+    });
+    var cells = AVANT.map(function (d) { return '<div class="cal-cell cal-cell-other"><span class="cal-day-number">' + d + '</span></div>'; }).join('');
+    for (var d = 1; d <= JOURS; d++) {
+        var pos = (PREMIER + d - 1) % 7;
+        var we = (pos >= 5) ? ' cal-cell-weekend' : '';
+        var ev = (evts[d] || []).map(function (o) {
+            var col = (o.a.statut === 'Confirmée') ? 'cal-event-blue' : (o.a.statut === 'Réalisée' ? 'cal-event-green' : 'cal-event-orange');
+            return '<div class="cal-event ' + col + '" onclick="openAG(' + o.i + ')">' + esc(o.a.entreprise) + ' · ' + esc(o.a.representant) + '</div>';
+        }).join('');
+        cells += '<div class="cal-cell' + we + '"><span class="cal-day-number">' + d + '</span>' + ev + '</div>';
+    }
+    var reste = (7 - ((AVANT.length + JOURS) % 7)) % 7;
+    for (var s = 1; s <= reste; s++) cells += '<div class="cal-cell cal-cell-other"><span class="cal-day-number">' + s + '</span></div>';
+    var el = document.getElementById('cal-ag-days'); if (el) el.innerHTML = cells;
+}
+
+/* Bascule liste / calendrier sur la page AG */
+function switchVueAG(sel) {
+    var cal = (sel.value === 'calendrier');
+    document.getElementById('ag-liste').style.display = cal ? 'none' : '';
+    document.getElementById('ag-calendrier').style.display = cal ? '' : 'none';
+    document.getElementById('ag-tabs').style.display = cal ? 'none' : '';
+}
+
+/* ---- ACTIONNAIRES ---- */
+function viewActionnaires() {
+    var rows = pick(CONTACTS, function (c) { return c.type === 'Actionnaire'; }, function (c) { return c.agH; });
+    buildTable('tbl-actionnaires', COL.contact.concat([
+        {i:'🔗', l:'Organisation',      v:function(r){return lnk(r.organisation);}},
+        {i:'▾',  l:'AG Herrikoa',       v:function(r){return bdg(B.agH, r.agH);}},
+        {i:'☑',  l:'Abonné newsletter', v:function(r){return r.news ? 'Oui' : 'Non';}},
+        {i:'▾',  l:'Statut e-mail',     v:function(r){return bdg(B.mail, r.mail);}},
+        {i:'📅', l:'Dernier envoi',     v:function(r){return txt(r.envoi);}}
+    ]), rows, 'openContact');
+    setCnt('cnt-actionnaires', rows.length, 'actionnaires');
+}
+
+/* ---- ORGANISATIONS (partenaires, institutionnels) ---- */
+function viewOrganisations(id, cntId, type, mot) {
+    var rows = pick(ORGANISATIONS, function (o) { return o.type === type; });
+    buildTable(id, [
+        COL.nomPrim('nom'),
+        {i:'A',  l:'Adresse',     v:function(r){return txt(r.adresse);}},
+        {i:'A',  l:'Code postal', v:function(r){return txt(r.cp);}},
+        {i:'A',  l:'Ville',       v:function(r){return txt(r.ville);}},
+        {i:'🔗', l:'Contacts',    v:function(r){
+            var n = CONTACTS.filter(function (c) { return c.organisation === r.nom; }).length;
+            return n ? n + ' contact' + (n > 1 ? 's' : '') : '-'; }}
+    ], rows, 'openOrganisation');
+    setCnt(cntId, rows.length, mot);
+}
+function viewContactsType(id, cntId, type, mot) {
+    var rows = pick(CONTACTS, function (c) { return c.type === type; });
+    buildTable(id, COL.contact.concat([
+        {i:'🔗', l:'Organisation',      v:function(r){return lnk(r.organisation);}},
+        {i:'▾',  l:'Source',            v:function(r){return bdg(B.source, r.source);}},
+        {i:'☑',  l:'Abonné newsletter', v:function(r){return r.news ? 'Oui' : 'Non';}},
+        {i:'▾',  l:'Statut e-mail',     v:function(r){return bdg(B.mail, r.mail);}}
+    ]), rows, 'openContact');
+    setCnt(cntId, rows.length, mot);
+}
+
+/* ---- COMMUNICATION ---- */
+function viewPublications() {
+    var rows = pick(PUBLICATIONS, function (p) { return p.type === 'Post LinkedIn'; }, function (p) { return p.compte; });
+    buildTable('tbl-publications', [
+        {i:'A',  l:'Titre',           v:function(r){return '<span class="col-primary">'+esc(r.titre)+'</span>';}},
+        {i:'▾',  l:'Type',            v:function(r){return bdg(B.typePub, r.type);}},
+        {i:'📅', l:'Date',            v:function(r){return txt(r.date);}},
+        {i:'≡',  l:'Contenu',         v:function(r){return esc(r.contenu.slice(0,52))+'…';}},
+        {i:'▾',  l:'Statut du post',  v:function(r){return bdg(B.statutPost, r.statutPost);}},
+        {i:'▾',  l:'Compte',          v:function(r){return bdg(B.compte, r.compte);}},
+        {i:'🔗', l:'Entreprise liée', v:function(r){return lnk(r.entreprise);}},
+        {i:'📎', l:'Illustration',    v:function(r){return r.illustration ? '🖼️ '+esc(r.illustration) : '-';}},
+        {i:'≡',  l:'Commentaires',    v:function(r){return txt(r.commentaires);}}
+    ], rows, 'openPublication');
+    setCnt('cnt-publications', rows.length, 'publications');
+}
+function viewEvenements() {
+    var rows = pick(PUBLICATIONS, function (p) { return p.type === 'Événement'; }, function (p) { return p.statutEv; });
+    buildTable('tbl-evenements', [
+        {i:'A',  l:'Titre',            v:function(r){return '<span class="col-primary">'+esc(r.titre)+'</span>';}},
+        {i:'📅', l:'Date',             v:function(r){return txt(r.date);}},
+        {i:'≡',  l:'Contenu',          v:function(r){return esc(r.contenu.slice(0,58))+'…';}},
+        {i:'#',  l:'Invités', cls:'col-number',  v:function(r){return txt(r.invites);}},
+        {i:'#',  l:'Inscrits', cls:'col-number', v:function(r){return txt(r.inscrits);}},
+        {i:'#',  l:'Relances à faire', cls:'col-number', v:function(r){return txt(r.relances);}},
+        {i:'▾',  l:'Statut',           v:function(r){return bdg(B.statutEv, r.statutEv);}},
+        {i:'▾',  l:'Statut du post',   v:function(r){return bdg(B.statutPost, r.statutPost);}}
+    ], rows, 'openEvenement');
+    setCnt('cnt-evenements', rows.length, 'évènements');
+}
+function viewCalendrier() {
+    var JOURS = 31, PREMIER = 5, AVANT = [27,28,29,30,31], AUJ = 3;
+    var evts = {}, nonProg = 0;
+    PUBLICATIONS.forEach(function (p, i) {
+        if (!p.date) { nonProg++; return; }
+        var m = p.date.split('/');
+        if (m[1] !== '08' || m[2] !== '2026') return;
+        (evts[parseInt(m[0],10)] = evts[parseInt(m[0],10)] || []).push({ p: p, i: i });
+    });
+    var cells = AVANT.map(function (d) { return '<div class="cal-cell cal-cell-other"><span class="cal-day-number">' + d + '</span></div>'; }).join('');
+    for (var d = 1; d <= JOURS; d++) {
+        var pos = (PREMIER + d - 1) % 7;
+        var we = (pos >= 5) ? ' cal-cell-weekend' : '';
+        var today = (d === AUJ) ? ' cal-cell-today' : '';
+        var numHtml = (d === AUJ) ? '<span class="cal-day-number cal-today-number">' + d + '</span>' : '<span class="cal-day-number">' + d + '</span>';
+        var ev = (evts[d] || []).map(function (o) {
+            var col = (o.p.type === 'Événement') ? 'cal-event-purple' : (o.p.statutPost === 'Programmé' ? 'cal-event-blue' : 'cal-event-orange');
+            var fn = (o.p.type === 'Événement') ? 'openEvenement' : 'openPublication';
+            return '<div class="cal-event ' + col + '" onclick="' + fn + '(' + o.i + ')">' + esc(o.p.titre) + ' · ' + esc(o.p.compte) + '</div>';
+        }).join('');
+        cells += '<div class="cal-cell' + we + today + '">' + numHtml + ev + '</div>';
+    }
+    var reste = (7 - ((AVANT.length + JOURS) % 7)) % 7;
+    for (var s = 1; s <= reste; s++) cells += '<div class="cal-cell cal-cell-other"><span class="cal-day-number">' + s + '</span></div>';
+    var el = document.getElementById('cal-days'); if (el) el.innerHTML = cells;
+    var u = document.getElementById('cal-unscheduled');
+    if (u) u.textContent = 'Voir publications (' + nonProg + ' élément(s) non programmé(s))';
+}
+
+/* ---- Onglets, navigation, champs interactifs ---- */
+function filterTab(tab, tableId, value) {
+    var bar = tab.closest('.list-tabs');
+    bar.querySelectorAll('.list-tab').forEach(function (t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    document.querySelectorAll('#' + tableId + ' tbody tr').forEach(function (r) {
+        r.style.display = (value === 'all' || r.getAttribute('data-tab') === value) ? '' : 'none';
+    });
+}
+function showPage(pageId, el) {
+    document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('active'); });
+    document.getElementById(pageId).classList.add('active');
+    document.querySelectorAll('.sidebar-item[data-page]').forEach(function (i) { i.classList.remove('active'); });
+    if (el) el.classList.add('active');
+}
+document.addEventListener('click', function (e) {
+    if (!e.target.closest('.field-select')) {
+        document.querySelectorAll('.field-select-dropdown.open').forEach(function (d) { d.classList.remove('open'); });
+    }
+});
+function toggleSelect(trigger) {
+    var dd = trigger.nextElementSibling, open = dd.classList.contains('open');
+    document.querySelectorAll('.field-select-dropdown.open').forEach(function (d) { d.classList.remove('open'); });
+    if (!open) {
+        dd.classList.add('open');
+        var cur = trigger.querySelector('[id^="val-"]'), t = cur ? cur.textContent.trim() : '';
+        dd.querySelectorAll('.field-select-option').forEach(function (o) { o.classList.toggle('selected', o.textContent.trim() === t); });
+    }
+}
+function selectOption(option, id) {
+    var el = document.getElementById('val-' + id);
+    if (el) { el.textContent = option.textContent.trim(); el.className = 'badge ' + (option.getAttribute('data-badge-class') || 'badge-gray'); }
+    option.closest('.field-select-dropdown').classList.remove('open');
+}
+function editText(w) {
+    var d = w.querySelector('.field-text-display'), i = w.querySelector('.field-text-input');
+    if (!i) return;
+    d.style.display = 'none'; i.style.display = 'block'; i.focus(); i.select(); w.style.borderColor = '#166ee1';
+}
+function saveText(i) {
+    var w = i.closest('.field-text'), d = w.querySelector('.field-text-display');
+    d.textContent = i.value || '-'; d.style.display = 'block'; i.style.display = 'none'; w.style.borderColor = 'transparent';
+}
+function editTextarea(w) {
+    var d = w.querySelector('.field-textarea-display'), i = w.querySelector('.field-textarea-input');
+    if (!i) return;
+    i.value = (d.textContent === '-') ? '' : d.textContent;
+    d.style.display = 'none'; i.style.display = 'block'; i.focus(); w.style.borderColor = '#166ee1';
+}
+function saveTextarea(i) {
+    var w = i.closest('.field-textarea'), d = w.querySelector('.field-textarea-display');
+    d.textContent = i.value || '-'; d.style.display = 'block'; i.style.display = 'none'; w.style.borderColor = 'transparent';
+}
+
+/* ---- Initialisation ---- */
+viewSurveiller(); viewPipeChart(); viewContactsChart();
+viewKanban(); viewEntreprises(); viewContactsPart(); viewOperations(); viewAGs(); viewCalendrierAG();
+viewActionnaires();
+viewOrganisations('tbl-org-part', 'cnt-org-part', 'Partenaire', 'entreprises partenaires');
+viewContactsType('tbl-ct-part', 'cnt-ct-part', 'Partenaire', 'contacts partenaires');
+viewOrganisations('tbl-org-inst', 'cnt-org-inst', 'Institutionnel', 'entreprises institutionnelles');
+viewContactsType('tbl-ct-inst', 'cnt-ct-inst', 'Institutionnel', 'contacts institutionnels');
+viewPublications(); viewEvenements(); viewCalendrier();
+
+</script>
+</body>
+</html>
